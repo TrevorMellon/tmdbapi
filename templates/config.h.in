@@ -3,6 +3,8 @@
 
 #include <string>
 
+#define TMDB_USE_OPENSSL=@USING_OPENSSL@
+
 namespace tmdb
 {
 	
