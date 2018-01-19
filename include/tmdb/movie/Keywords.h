@@ -1,0 +1,37 @@
+/*****************************************************
+*                                                    *
+*  copyright (c) 2018 Trevor Mellon                  *
+*  For further information contact t@jno.io          *
+*                                                    *
+*  Licensed under the BSD 3-clause license           *
+*  See LICENCE file for more information             *
+*                                                    *
+******************************************************/
+
+#ifndef TMDB_KEYWORDS_H
+#define TMDB_KEYWORDS_H
+
+#include <stdint.h>
+#include <tuple>
+#include <string>
+#include <vector>
+
+#include <tmdb/movie/Types.h>
+
+namespace tmdb
+{
+	class KeywordsPrivate;
+
+	class Keywords
+	{
+	public:
+		Keywords();
+		~Keywords();
+	public:
+		data::KeywordList get(uint64_t key);
+	public:
+		KeywordsPrivate *_p;
+	};
+}//namespace tmdb;
+
+#endif //TMDB_KEYWORDS_H

@@ -1,0 +1,13 @@
+#ifndef TMDB_CONFIG_H
+#define TMDB_CONFIG_H
+
+#include <string>
+
+namespace tmdb
+{
+	
+	const std::string tmdbapikey = "@TMDB_API_KEY@";
+
+}//namespace tmdb
+
+#endif //TMDB_CONFIG_H

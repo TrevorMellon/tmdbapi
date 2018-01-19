@@ -1,0 +1,133 @@
+/*****************************************************
+*                                                    *
+*  copyright (c) 2018 Trevor Mellon                  *
+*  For further information contact t@jno.io          *
+*                                                    *
+*  Licensed under the BSD 3-clause license           *
+*  See LICENCE file for more information             *
+*                                                    *
+******************************************************/
+
+#include "tmdb/movie/Videos.h"
+
+#include "tmdb/ApiGetJson.h"
+
+#include <sstream>
+
+# include <rapidjson/rapidjson.h>
+# include <rapidjson/document.h>
+
+#include <tmdb/util.h>
+
+using namespace tmdb;
+
+namespace tmdb
+{
+	class VideosPrivate
+	{
+	public:
+		VideosPrivate(Videos *q)
+		{
+			_q = q;
+		}
+
+		data::VideosList get(uint64_t movie_id)
+		{
+			ApiGetJson &api = ApiGetJsonSingleton::get_mutable_instance();
+
+			std::stringstream ss;
+			ss << "/3/movie/" << movie_id << "/videos";
+
+			std::string j = api.json(ss.str());
+
+			data::VideosList vl;
+			vl.zero();
+
+			if (j.empty())
+			{
+				return vl;
+			}
+
+			return parse(j);
+		}
+
+		data::VideosList parse(std::string j)
+		{
+			data::VideosList vl;
+
+			data::VideosData data;
+
+			rapidjson::Document d;
+			d.Parse<0>(j.c_str());
+
+			if (d.HasMember("results"))
+			{
+				if (d["results"].IsArray())
+				{
+					rapidjson::Value &r1 = d["results"];
+					for (auto &rr : r1.GetArray())
+					{
+						data.zero();
+						if (rjcheck(rr, "id"))
+						{
+							data.id = rr["id"].GetInt64();
+						}
+						if (rjcheck(rr, "iso_639_1"))
+						{
+							data.iso_639_1 = rr["iso_639_1"].GetString();
+						}
+						if (rjcheck(rr, "iso_3166_1"))
+						{
+							data.iso_3166_1 = rr["iso_3166_1"].GetString();
+						}
+						if (rjcheck(rr, "key"))
+						{
+							data.key = rr["key"].GetString();
+						}
+						if (rjcheck(rr, "name"))
+						{
+							data.name = rr["name"].GetString();
+						}
+						if (rjcheck(rr, "site"))
+						{
+							data.site = rr["site"].GetString();
+						}
+						if (rjcheck(rr, "size"))
+						{
+							data.size = rr["size"].GetInt();
+						}
+						if (rjcheck(rr, "type"))
+						{
+							data.type = rr["type"].GetString();
+						}
+						vl.videos.push_back(data);
+					}
+				}
+
+			}
+			return vl;
+		}
+	public:
+		Videos *_q;
+
+	};
+}
+
+Videos::Videos()
+{
+	_p = new VideosPrivate(this);
+}
+
+Videos::~Videos()
+{
+	if (_p)
+	{
+		delete _p;
+		_p = nullptr;
+	}
+}
+
+data::VideosList Videos::get(uint64_t movie_id)
+{
+	return _p->get(movie_id);
+}
