@@ -28,7 +28,10 @@
 #include <iostream>
 #include <sstream>
 #include <iomanip>
-#include <curl/curl.h>
+
+#if TMDB_USE_CURL
+# include <curl/curl.h>
+#endif
 
 namespace a = boost::asio;
 namespace t = boost::asio::ip;
