@@ -28,9 +28,6 @@ SET(INC_MOVIE_T
 	${PROJECT_SOURCE_DIR}/include/tmdb/movie/Videos.h
 )
 
-include_directories(${CMAKE_BINARY_DIR}/include/)
-include_directories(inl)
-
 SET (SOURCES ${SRC_T} ${INC_T} ${SRC_MOVIE_T} ${INC_MOVIE_T})
 
 SOURCE_GROUP("include" FILES ${INC_T})
