@@ -3,7 +3,8 @@ include(../cmake/src.cmake)
 include(../cmake/req.cmake)
 
 if(CMAKE_BUILD_TYPE MATCHES "Release")
-
+	enable_testing()
+	
 	SET(GTEST_MSVC_SEARCH "MD")
 	find_package(GTest)
 
