@@ -13,6 +13,11 @@ endif()
 include(cmake/src.cmake)
 include(cmake/req.cmake)
 
+if(MSVC)
+	add_definitions(-D_WIN32_WINNT=_WIN32_WINNT_WIN7)
+	add_definitions(-D_WINSOCK_DEPRECATED_NO_WARNINGS)
+endif(MSVC)
+
 if(OPENSSL_FOUND AND USING_OPENSSL)
 	SET(USING_OPENSSL 1)
 else(OPENSSL_FOUND AND USING_OPENSSL)
