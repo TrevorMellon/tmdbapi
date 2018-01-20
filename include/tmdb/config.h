@@ -3,7 +3,7 @@
 
 #include <string>
 
-#define TMDB_USE_OPENSSL=1
+#define TMDB_USE_OPENSSL 1
 
 namespace tmdb
 {

@@ -31,3 +31,5 @@ include_directories("${RAPIDJSON_INCLUDE_DIRS}")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${RAPIDJSON_CXX_FLAGS}")
 
 find_package(OpenSSL)
+
+find_package(CURL)

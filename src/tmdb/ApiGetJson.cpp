@@ -40,7 +40,7 @@ namespace tmdb
 
 	std::string url_encode(const std::wstring &value, bool fixquery = false)
 	{
-
+#ifdef TMDB_USE_CURL
 		CURL *h = curl_easy_init();
 
 		std::string in = boost::locale::conv::utf_to_utf<char>(value);
@@ -50,16 +50,19 @@ namespace tmdb
 		curl_easy_cleanup(h);
 
 		return s;
-
+#else
+		// Following code modified from:
+		// https://stackoverflow.com/questions/154536/encode-decode-urls-in-c
+		
 		std::ostringstream escaped;
 		escaped.fill('0');
 		escaped << std::hex;
 
-		//std::string val = boost::locale::conv::utf_to_utf<char>(value);
+		std::string val = boost::locale::conv::utf_to_utf<char>(value);
 
-		for (std::wstring::const_iterator i = value.begin(), n = value.end(); i != n; ++i)
+		for (std::string::const_iterator i = val.begin(), n = val.end(); i != n; ++i)
 		{
-			wchar_t c = (*i);
+			char c = (*i);
 			boost::locale::generator gen;
 			std::locale loc = gen("UTF-8");
 
@@ -76,11 +79,7 @@ namespace tmdb
 
 			if (isanum || c == '-' || c == '_' || c == '.' || c == '~')
 			{
-				wchar_t tc[2];
-				tc[0] = c;
-				tc[1] = '\0';
-				std::string t = boost::locale::conv::utf_to_utf<char>(std::wstring(tc));
-				escaped << t;
+				escaped << c;
 			}
 			else if (c == ' ')
 			{
@@ -95,15 +94,16 @@ namespace tmdb
 		}
 
 		return escaped.str();
+#endif
 	}
 
 	class ApiGetJsonPrivate
 	{
 	public:
-		ApiGetJsonPrivate(ApiGetJson *q)
+		ApiGetJsonPrivate(ApiGetJson *q, bool usessl)
 		{
 			_q = q;
-			usessl = true;
+			_usessl = usessl;
 		}
 	public:
 		std::string json(const std::string &url);
@@ -114,7 +114,7 @@ namespace tmdb
 		std::vector<QueryOption> _options;
 		ApiGetJson *_q;
 		static boost::posix_time::ptime _tp;
-		bool usessl;
+		bool _usessl;
 	};
 	boost::posix_time::ptime ApiGetJsonPrivate::_tp = boost::posix_time::microsec_clock::local_time();
 
@@ -122,7 +122,7 @@ namespace tmdb
 	std::string ApiGetJsonPrivate::json(const std::string &url)
 	{
 #if TMDB_USE_OPENSSL
-		if (usessl)
+		if (_usessl)
 		{
 			return jsonhttps(url);
 		}
@@ -490,9 +490,9 @@ namespace tmdb
 
 
 
-ApiGetJson::ApiGetJson()
+ApiGetJson::ApiGetJson(bool usessl)
 {
-	_p = new ApiGetJsonPrivate(this);
+	_p = new ApiGetJsonPrivate(this, usessl);
 	_p->_url = "/movie/";
 }
 

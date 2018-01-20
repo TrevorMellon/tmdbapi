@@ -4,6 +4,7 @@ project (tmdb)
 
 option(SONAR "Building for sonar scanner" OFF)
 option(USING_OPENSSL "Use openSSL" ON)
+option(USING_CURL "Use CURL library" ON)
 
 if(NOT DEFINED TMDB_API_KEY)
 	message(FATAL_ERROR "TMDB_API_KEY must be defined")
@@ -17,6 +18,12 @@ if(OPENSSL_FOUND AND USING_OPENSSL)
 else(OPENSSL_FOUND AND USING_OPENSSL)
 	SET(USING_OPENSSL 0)
 endif(OPENSSL_FOUND AND USING_OPENSSL)
+
+if(CURL_FOUND AND USING_CURL)
+	SET(USING_CURL 1)
+else(CURL_FOUND AND USING_CURL)
+	SET(USING_CURL 0)
+endif(CURL_FOUND AND USING_CURL)
 
 configure_file(templates/config.h.in ${PROJECT_SOURCE_DIR}/include/tmdb/config.h)
 
