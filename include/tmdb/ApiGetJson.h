@@ -26,7 +26,7 @@ namespace tmdb
 
 	class ApiGetJson{
 	public:
-		ApiGetJson();
+		ApiGetJson(bool usessl = true);
 		~ApiGetJson();
 	public:
 		std::string json(std::string url = "");
