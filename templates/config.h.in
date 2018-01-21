@@ -7,5 +7,6 @@
 #define TMDB_USE_CURL 	@USING_CURL@
 #define TMDB_API_KEY 	"@TMDB_API_KEY@"
 #define TMDB_DEFAULT_SSL  @DEFAULT_SSL@
+#define TMDB_PEM_FILE	"@SSL_PEM_FILE@"
 
 #endif //TMDB_CONFIG_H

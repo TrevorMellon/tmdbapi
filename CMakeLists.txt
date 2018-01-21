@@ -6,6 +6,7 @@ option(SONAR "Building for sonar scanner" OFF)
 option(USING_OPENSSL "Use openSSL" ON)
 option(USING_CURL "Use CURL library" ON)
 option(DEFAULT_SSL "Default option for ssl" ON)
+option(SSL_PEM_FILE "Location of CA file" "../etc/tmdb.pem")
 
 if(NOT DEFINED TMDB_API_KEY)
 	message(FATAL_ERROR "TMDB_API_KEY must be defined")
@@ -36,6 +37,10 @@ if(CURL_FOUND AND USING_CURL)
 else(CURL_FOUND AND USING_CURL)
 	SET(USING_CURL 0)
 endif(CURL_FOUND AND USING_CURL)
+
+if(SONAR)
+	SET(SSL_PEM_FILE ${PROJECT_SOURCE_DIR}/etc/tmdb.pem)
+endif(SONAR)
 
 configure_file(templates/config.h.in ${PROJECT_SOURCE_DIR}/include/tmdb/config.h)
 

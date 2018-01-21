@@ -305,8 +305,8 @@ namespace tmdb
 		boost::asio::ssl::context ctx(boost::asio::ssl::context::sslv23_client);
 		ctx.set_verify_mode(boost::asio::ssl::verify_peer);
 		//ctx.set_default_verify_paths(ec);
-		ctx.use_certificate_chain_file("../etc/tmdb.pem");
-		ctx.load_verify_file("../etc/tmdb.pem");
+		ctx.use_certificate_chain_file(TMDB_PEM_FILE);
+		ctx.load_verify_file(TMDB_PEM_FILE);
 
 		if (ec.value() != boost::system::errc::success)
 		{
