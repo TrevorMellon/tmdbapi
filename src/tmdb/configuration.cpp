@@ -307,5 +307,10 @@ Configuration::~Configuration()
 
 std::string Configuration::getImageUrl(const ImageType &type, const ImageSize &size, const std::string &partialurl, const bool usessl)
 {
-	return _p->getImageUrl(type, size, partialurl, usessl);
+	return _p->getImageUrl(type, size, partialurl, false);
+}
+
+std::string getImageUrlSecure(const ImageType &type, const ImageSize &size, const std::string &partialurl)
+{
+	return _p->getImageUrl(type, size, partialurl, true);
 }
