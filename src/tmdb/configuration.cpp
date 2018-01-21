@@ -52,22 +52,22 @@ namespace tmdb
 
 							if (val == "w300")
 							{
-								_backdropMap.insert(std::pair<uint32_t, std::string>(Configuration::ImageTiny, val));
-								_backdropMap.insert(std::pair<uint32_t, std::string>(Configuration::ImageSmall, val));
+								_backdropMap.insert(std::pair<uint32_t, std::string>(ImageTiny, val));
+								_backdropMap.insert(std::pair<uint32_t, std::string>(ImageSmall, val));
 							}
 							else if (val == "w780")
 							{
-								_backdropMap.insert(std::pair<uint32_t, std::string>(Configuration::ImageMedium, val));
+								_backdropMap.insert(std::pair<uint32_t, std::string>(ImageMedium, val));
 							}
 							else if (val == "w1280")
 							{
-								_backdropMap.insert(std::pair<uint32_t, std::string>(Configuration::ImageLarge, val));
-								_backdropMap.insert(std::pair<uint32_t, std::string>(Configuration::ImageXLarge, val));
-								_backdropMap.insert(std::pair<uint32_t, std::string>(Configuration::ImageHuge, val));
+								_backdropMap.insert(std::pair<uint32_t, std::string>(ImageLarge, val));
+								_backdropMap.insert(std::pair<uint32_t, std::string>(ImageXLarge, val));
+								_backdropMap.insert(std::pair<uint32_t, std::string>(ImageHuge, val));
 							}
 							else if (val == "original")
 							{
-								_backdropMap.insert(std::pair<uint32_t, std::string>(Configuration::ImageOriginal, val));
+								_backdropMap.insert(std::pair<uint32_t, std::string>(ImageOriginal, val));
 							}
 						}
 					}
@@ -86,31 +86,31 @@ namespace tmdb
 
 							if (val == "w45")
 							{
-								_logoMap.insert(std::pair<uint32_t, std::string>(Configuration::ImageTiny, val));
+								_logoMap.insert(std::pair<uint32_t, std::string>(ImageTiny, val));
 							}
 							else if (val == "w92")
 							{
-								_logoMap.insert(std::pair<uint32_t, std::string>(Configuration::ImageSmall, val));
+								_logoMap.insert(std::pair<uint32_t, std::string>(ImageSmall, val));
 							}
 							else if (val == "w154")
 							{
-								_logoMap.insert(std::pair<uint32_t, std::string>(Configuration::ImageMedium, val));
+								_logoMap.insert(std::pair<uint32_t, std::string>(ImageMedium, val));
 							}
 							else if (val == "w185")
 							{
-								_logoMap.insert(std::pair<uint32_t, std::string>(Configuration::ImageLarge, val));
+								_logoMap.insert(std::pair<uint32_t, std::string>(ImageLarge, val));
 							}
 							else if (val == "w300")
 							{
-								_logoMap.insert(std::pair<uint32_t, std::string>(Configuration::ImageXLarge, val));
+								_logoMap.insert(std::pair<uint32_t, std::string>(ImageXLarge, val));
 							}
 							else if (val == "w500")
 							{
-								_logoMap.insert(std::pair<uint32_t, std::string>(Configuration::ImageHuge, val));
+								_logoMap.insert(std::pair<uint32_t, std::string>(ImageHuge, val));
 							}
 							else if (val == "original")
 							{
-								_logoMap.insert(std::pair<uint32_t, std::string>(Configuration::ImageOriginal, val));
+								_logoMap.insert(std::pair<uint32_t, std::string>(ImageOriginal, val));
 							}
 						}
 					}
@@ -131,31 +131,31 @@ namespace tmdb
 
 							if (val == "w92")
 							{
-								_posterMap.insert(std::pair<uint32_t, std::string>(Configuration::ImageTiny, val));
+								_posterMap.insert(std::pair<uint32_t, std::string>(ImageTiny, val));
 							}
 							else if (val == "w154")
 							{
-								_posterMap.insert(std::pair<uint32_t, std::string>(Configuration::ImageSmall, val));
+								_posterMap.insert(std::pair<uint32_t, std::string>(ImageSmall, val));
 							}
 							else if (val == "w185")
 							{
-								_posterMap.insert(std::pair<uint32_t, std::string>(Configuration::ImageMedium, val));
+								_posterMap.insert(std::pair<uint32_t, std::string>(ImageMedium, val));
 							}
 							else if (val == "w300")
 							{
-								_posterMap.insert(std::pair<uint32_t, std::string>(Configuration::ImageLarge, val));
+								_posterMap.insert(std::pair<uint32_t, std::string>(ImageLarge, val));
 							}
 							else if (val == "w500")
 							{
-								_posterMap.insert(std::pair<uint32_t, std::string>(Configuration::ImageXLarge, val));
+								_posterMap.insert(std::pair<uint32_t, std::string>(ImageXLarge, val));
 							}
 							else if (val == "w780")
 							{
-								_posterMap.insert(std::pair<uint32_t, std::string>(Configuration::ImageHuge, val));
+								_posterMap.insert(std::pair<uint32_t, std::string>(ImageHuge, val));
 							}
 							else if (val == "original")
 							{
-								_posterMap.insert(std::pair<uint32_t, std::string>(Configuration::ImageOriginal, val));
+								_posterMap.insert(std::pair<uint32_t, std::string>(ImageOriginal, val));
 							}
 						}
 					}
@@ -176,22 +176,22 @@ namespace tmdb
 
 							if (val == "w45")
 							{
-								_profileMap.insert(std::pair<uint32_t, std::string>(Configuration::ImageTiny, val));
-								_profileMap.insert(std::pair<uint32_t, std::string>(Configuration::ImageSmall, val));
+								_profileMap.insert(std::pair<uint32_t, std::string>(ImageTiny, val));
+								_profileMap.insert(std::pair<uint32_t, std::string>(ImageSmall, val));
 							}
 							else if (val == "w185")
 							{
-								_profileMap.insert(std::pair<uint32_t, std::string>(Configuration::ImageMedium, val));
+								_profileMap.insert(std::pair<uint32_t, std::string>(ImageMedium, val));
 							}
 							else if (val == "h632")
 							{
-								_profileMap.insert(std::pair<uint32_t, std::string>(Configuration::ImageLarge, val));
-								_profileMap.insert(std::pair<uint32_t, std::string>(Configuration::ImageXLarge, val));
-								_profileMap.insert(std::pair<uint32_t, std::string>(Configuration::ImageHuge, val));
+								_profileMap.insert(std::pair<uint32_t, std::string>(ImageLarge, val));
+								_profileMap.insert(std::pair<uint32_t, std::string>(ImageXLarge, val));
+								_profileMap.insert(std::pair<uint32_t, std::string>(ImageHuge, val));
 							}
 							else if (val == "original")
 							{
-								_profileMap.insert(std::pair<uint32_t, std::string>(Configuration::ImageOriginal, val));
+								_profileMap.insert(std::pair<uint32_t, std::string>(ImageOriginal, val));
 							}
 						}
 					}
@@ -212,22 +212,22 @@ namespace tmdb
 
 							if (val == "w45")
 							{
-								_profileMap.insert(std::pair<uint32_t, std::string>(Configuration::ImageTiny, val));
-								_profileMap.insert(std::pair<uint32_t, std::string>(Configuration::ImageSmall, val));
+								_profileMap.insert(std::pair<uint32_t, std::string>(ImageTiny, val));
+								_profileMap.insert(std::pair<uint32_t, std::string>(ImageSmall, val));
 							}
 							else if (val == "w185")
 							{
-								_profileMap.insert(std::pair<uint32_t, std::string>(Configuration::ImageMedium, val));
+								_profileMap.insert(std::pair<uint32_t, std::string>(ImageMedium, val));
 							}
 							else if (val == "h632")
 							{
-								_profileMap.insert(std::pair<uint32_t, std::string>(Configuration::ImageLarge, val));
-								_profileMap.insert(std::pair<uint32_t, std::string>(Configuration::ImageXLarge, val));
-								_profileMap.insert(std::pair<uint32_t, std::string>(Configuration::ImageHuge, val));
+								_profileMap.insert(std::pair<uint32_t, std::string>(ImageLarge, val));
+								_profileMap.insert(std::pair<uint32_t, std::string>(ImageXLarge, val));
+								_profileMap.insert(std::pair<uint32_t, std::string>(ImageHuge, val));
 							}
 							else if (val == "original")
 							{
-								_profileMap.insert(std::pair<uint32_t, std::string>(Configuration::ImageOriginal, val));
+								_profileMap.insert(std::pair<uint32_t, std::string>(ImageOriginal, val));
 							}
 						}
 					}
@@ -305,5 +305,5 @@ Configuration::~Configuration()
 
 std::string Configuration::getImageUrl(const ImageType &type, const ImageSize &size, const std::string &partialurl, const bool usessl)
 {
-	_p->getImageUrl(type, size, partialurl, usessl);
+	return _p->getImageUrl(type, size, partialurl, usessl);
 }

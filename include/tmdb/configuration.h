@@ -1,6 +1,8 @@
 #ifndef TMDB_CONFIGURATION_H
 #define TMDB_CONFIGURATION_H
 
+#include <string>
+
 namespace tmdb
 {
 	enum ImageSize
