@@ -31,6 +31,9 @@ _ReSharper*/
 #Nuget packages folder
 packages/
 
+#config.h file
+include/tmdb/config.h
+
 #Visual Studio
 vs/**
 
