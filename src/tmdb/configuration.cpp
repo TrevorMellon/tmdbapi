@@ -234,6 +234,50 @@ namespace tmdb
 				}
 			}
 		}
+
+		std::string getImageUrl(const ImageType &type, const ImageSize &size, const std::string url, bool usessl = false)
+		{
+			std::map<uint32_t, std::string> *map = nullptr;
+
+			if (type == ImageTypeBackdrop)
+			{
+				map = &_backdropMap;
+			}
+			else if (type == ImageTypeLogo)
+			{
+				map = &_logoMap;
+			}
+			else if (type == ImageTypePoster)
+			{
+				map = &_posterMap;
+			}
+			else if (type == ImageTypeProfile)
+			{
+				map = &_profileMap;
+			}
+			else if (type == ImageTypeStill)
+			{
+				map = &_stillMap;
+			}
+			else
+			{
+				return "";
+			}
+
+			std::string sz = map->find(size)->second;
+
+			std::stringstream ss;
+			if (!usessl)
+			{
+				ss << baseurl << sz << "/" << url;
+			}
+			else
+			{
+				ss << secure_baseurl << sz << "/" << url;
+			}
+
+			return ss.str();
+		}
 	public:
 		std::string baseurl;
 		std::string secure_baseurl;
@@ -257,4 +301,9 @@ Configuration::~Configuration()
 {
 	delete _p;
 	_p = nullptr;
+}
+
+std::string Configuration::getImageUrl(const ImageType &type, const ImageSize &size, const std::string &partialurl, const bool usessl)
+{
+	_p->getImageUrl(type, size, partialurl, usessl);
 }

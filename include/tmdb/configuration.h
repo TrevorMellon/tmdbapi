@@ -32,6 +32,8 @@ namespace tmdb
 	public:
 		Configuration();
 		~Configuration();
+	public:
+		std::string getImageUrl(const ImageType &type, const ImageSize &size, const std::string &partialurl, const bool usessl = false);
 	private:
 		ConfigurationPrivate *_p;
 	};
