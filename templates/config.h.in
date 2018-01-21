@@ -4,13 +4,8 @@
 #include <string>
 
 #define TMDB_USE_OPENSSL @USING_OPENSSL@
-#define TMDB_USE_CURL @USING_CURL@
-
-namespace tmdb
-{
-	
-	const std::string tmdbapikey = "@TMDB_API_KEY@";
-
-}//namespace tmdb
+#define TMDB_USE_CURL 	@USING_CURL@
+#define TMDB_API_KEY 	"@TMDB_API_KEY@"
+#define TMDB_DEFAULT_SSL  @DEFAULT_SSL@
 
 #endif //TMDB_CONFIG_H

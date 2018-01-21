@@ -1,4 +1,5 @@
 
+#include <tmdb/config.h>
 #include <tmdb/configuration.h>
 #include <tmdb/ApiGetJson.h>
 
@@ -13,11 +14,12 @@ namespace tmdb
 	class ConfigurationPrivate
 	{
 	public:
-		ConfigurationPrivate()
+		ConfigurationPrivate(const bool usessl = TMDB_DEFAULT_SSL)
 		{
 			ApiGetJson &api = ApiGetJsonSingleton::get_mutable_instance();
 			api.clearOptions();
 			std::string j = api.json("/3/configuration");
+			parse(j);
 		}
 
 		void parse(std::string j)
@@ -269,11 +271,11 @@ namespace tmdb
 			std::stringstream ss;
 			if (!usessl)
 			{
-				ss << baseurl << sz << "/" << url;
+				ss << baseurl << sz << url;
 			}
 			else
 			{
-				ss << secure_baseurl << sz << "/" << url;
+				ss << secure_baseurl << sz << url;
 			}
 
 			return ss.str();
@@ -292,9 +294,9 @@ namespace tmdb
 
 using namespace tmdb;
 
-Configuration::Configuration()
+Configuration::Configuration(const bool usessl)
 {
-	_p = new ConfigurationPrivate();
+	_p = new ConfigurationPrivate(usessl);
 }
 
 Configuration::~Configuration()

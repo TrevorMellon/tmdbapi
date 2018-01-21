@@ -1,7 +1,11 @@
 #ifndef TMDB_CONFIGURATION_H
 #define TMDB_CONFIGURATION_H
 
+#include <tmdb/config.h>
+
 #include <string>
+
+#include <boost/serialization/singleton.hpp>
 
 namespace tmdb
 {
@@ -32,13 +36,16 @@ namespace tmdb
 	public:
 		
 	public:
-		Configuration();
+		Configuration(const bool usessl = TMDB_DEFAULT_SSL);
 		~Configuration();
 	public:
 		std::string getImageUrl(const ImageType &type, const ImageSize &size, const std::string &partialurl, const bool usessl = false);
 	private:
 		ConfigurationPrivate *_p;
 	};
+
+	typedef boost::serialization::singleton<Configuration> ConfigurationSingleton;
 }
+
 
 #endif //TMDB_CONFIGURATION_H

@@ -103,7 +103,7 @@ namespace tmdb
 	class ApiGetJsonPrivate
 	{
 	public:
-		ApiGetJsonPrivate(ApiGetJson *q, bool usessl)
+		ApiGetJsonPrivate(ApiGetJson *q, bool usessl = TMDB_DEFAULT_SSL)
 		{
 			_q = q;
 			_usessl = usessl;
@@ -188,7 +188,7 @@ namespace tmdb
 		{
 			getSS << _url;
 		}
-		getSS << "?api_key=" << tmdbapikey;
+		getSS << "?api_key=" << TMDB_API_KEY;
 
 
 		std::vector<QueryOption>::iterator iter;
@@ -373,7 +373,7 @@ namespace tmdb
 		{
 			getSS << _url;
 		}
-		getSS << "?api_key=" << tmdbapikey;
+		getSS << "?api_key=" << TMDB_API_KEY;
 
 
 		std::vector<QueryOption>::iterator iter;
@@ -533,4 +533,14 @@ void ApiGetJson::clearOptions()
 void ApiGetJson::setDefaultUrl(const std::string &url)
 {
 	_p->_url = url;
+}
+
+void ApiGetJson::setSSL(const bool use)
+{
+	_p->_usessl = use;
+}
+
+bool ApiGetJson::getSSL()
+{
+	return _p->_usessl;
 }

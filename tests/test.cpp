@@ -4,6 +4,7 @@
 
 #include <tmdb/movie/Movie.h>
 #include <tmdb/movie/Types.h>
+#include <tmdb/configuration.h>
 
 using namespace tmdb;
 
@@ -36,6 +37,8 @@ TEST(MovieApi, Movie)
 	EXPECT_EQ(101, mo->id);
 
 	ASSERT_NE(mo->title, "");
+
+	delete m;
 }
 
 TEST(MovieApi, CastAndCrew)
@@ -49,6 +52,8 @@ TEST(MovieApi, CastAndCrew)
 	EXPECT_EQ(101, mo->id);
 
 	ASSERT_NE(mo->cast.at(0).name, "");
+
+	delete m;
 }
 
 TEST(MovieApi, AlternativeTitle)
@@ -64,6 +69,8 @@ TEST(MovieApi, AlternativeTitle)
 	ASSERT_NE("", alt.iso_3166_1);
 
 	ASSERT_NE(alt.title, "");
+
+	delete m;
 }
 
 TEST(MovieApi, Videos)
@@ -79,6 +86,8 @@ TEST(MovieApi, Videos)
 	EXPECT_GT(vid.id, 0);
 
 	ASSERT_NE(vid.name, "");
+
+	delete m;
 }
 
 TEST(MovieApi, Keywords)
@@ -94,4 +103,32 @@ TEST(MovieApi, Keywords)
 	EXPECT_GT(kw.first, 0);
 
 	ASSERT_NE(kw.second, "");
+
+	delete m;
+}
+
+TEST(Configuration, Configuration)
+{
+	Movie *m = new Movie();
+
+	m->setId(101);	
+
+	std::shared_ptr<data::Movie> ms = m->scanMainMovie();
+
+	std::string partialurl = ms->backdrop_path;
+
+	Configuration &c = ConfigurationSingleton::get_mutable_instance();
+
+	std::string url =
+		c.getImageUrl(ImageTypeBackdrop, ImageMedium, partialurl);
+
+	std::stringstream ss;
+
+	ss << "http://image.tmdb.org/t/p/"
+		<< "w780"
+		<< "/mGN0lH2phYfesyEVqP2xvGUaxAQ.jpg";
+
+	EXPECT_EQ(ss.str(), url);
+
+	delete m;
 }

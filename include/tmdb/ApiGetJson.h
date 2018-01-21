@@ -12,6 +12,8 @@
 #ifndef TMDB_API_GET_JSON_H_
 #define TMDB_API_GET_JSON_H_
 
+#include <tmdb/config.h>
+
 #include <boost/serialization/singleton.hpp>
 
 #include <string>
@@ -24,9 +26,10 @@ namespace tmdb
 
 	class ApiGetJsonPrivate;
 
-	class ApiGetJson{
+	class ApiGetJson
+	{
 	public:
-		ApiGetJson(bool usessl = true);
+		ApiGetJson(bool usessl = TMDB_DEFAULT_SSL);
 		~ApiGetJson();
 	public:
 		std::string json(std::string url = "");
@@ -34,6 +37,9 @@ namespace tmdb
 		void addOption(const QueryOption &option);
 		void clearOptions();
 		void setDefaultUrl(const std::string &url);
+	public:
+		void setSSL(const bool use);
+		bool getSSL();
 	private:
 		ApiGetJsonPrivate *_p;
 	};
