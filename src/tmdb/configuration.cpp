@@ -305,12 +305,12 @@ Configuration::~Configuration()
 	_p = nullptr;
 }
 
-std::string Configuration::getImageUrl(const ImageType &type, const ImageSize &size, const std::string &partialurl, const bool usessl)
+std::string Configuration::getImageUrl(const ImageType &type, const ImageSize &size, const std::string &partialurl)
 {
 	return _p->getImageUrl(type, size, partialurl, false);
 }
 
-std::string getImageUrlSecure(const ImageType &type, const ImageSize &size, const std::string &partialurl)
+std::string Configuration::getImageUrlSecure(const ImageType &type, const ImageSize &size, const std::string &partialurl)
 {
 	return _p->getImageUrl(type, size, partialurl, true);
 }

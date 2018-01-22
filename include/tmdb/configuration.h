@@ -39,7 +39,8 @@ namespace tmdb
 		Configuration(const bool usessl = TMDB_DEFAULT_SSL);
 		~Configuration();
 	public:
-		std::string getImageUrl(const ImageType &type, const ImageSize &size, const std::string &partialurl, const bool usessl = false);
+		std::string getImageUrl(const ImageType &type, const ImageSize &size, const std::string &partialurl);
+		std::string getImageUrlSecure(const ImageType &type, const ImageSize &size, const std::string &partialurl);
 	private:
 		ConfigurationPrivate *_p;
 	};
