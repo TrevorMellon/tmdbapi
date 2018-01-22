@@ -2,12 +2,14 @@
 SET (SRC_T 
 	${PROJECT_SOURCE_DIR}/src/tmdb/ApiGetJson.cpp
 	${PROJECT_SOURCE_DIR}/src/tmdb/configuration.cpp
+	${PROJECT_SOURCE_DIR}/src/tmdb/iso.cpp
 )
 
 SET (INC_T
 	${PROJECT_SOURCE_DIR}/include/tmdb/ApiGetJson.h
 	${PROJECT_SOURCE_DIR}/include/tmdb/util.h
 	${PROJECT_SOURCE_DIR}/include/tmdb/configuration.h
+	${PROJECT_SOURCE_DIR}/include/tmdb/iso.h
 	
 	${PROJECT_SOURCE_DIR}/include/tmdb/config.h	
 )
