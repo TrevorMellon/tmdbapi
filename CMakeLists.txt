@@ -2,6 +2,8 @@ cmake_minimum_required (VERSION 2.8)
 set( VENDOR jno.io )
 project (tmdb)
 
+enable_testing()
+
 option(SONAR "Building for sonar scanner" OFF)
 option(USING_OPENSSL "Use openSSL" ON)
 option(USING_CURL "Use CURL library" ON)
@@ -51,7 +53,7 @@ include_directories(${Boost_INCLUDE_DIRS})
 
 add_library(tmdb STATIC ${SOURCES} )
 
-add_subdirectory(tests)
+include(cmake/tests.cmake)
 
 if(SONAR)
 	include(cmake/sonar.cmake)
