@@ -10,6 +10,7 @@ SET (INC_T
 	${PROJECT_SOURCE_DIR}/include/tmdb/util.h
 	${PROJECT_SOURCE_DIR}/include/tmdb/configuration.h
 	${PROJECT_SOURCE_DIR}/include/tmdb/iso.h
+	${PROJECT_SOURCE_DIR}/include/tmdb/isoTypes.h
 	
 	${PROJECT_SOURCE_DIR}/include/tmdb/config.h	
 )
