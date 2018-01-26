@@ -8,7 +8,7 @@
 *                                                    *
 ******************************************************/
 
-#include <tmdb/ApiGetJson.h>
+#include <tmdb/ApiGet.h>
 #include <tmdb/config.h>
 
 #include <vector>
@@ -25,9 +25,14 @@
 #include <boost/algorithm/string.hpp>
 #include <boost/lexical_cast.hpp>
 #include <boost/thread.hpp>
+
+#include <boost/filesystem.hpp>
+
 #include <iostream>
 #include <sstream>
 #include <iomanip>
+#include <fstream>
+
 
 #if TMDB_USE_CURL
 # include <curl/curl.h>
@@ -40,6 +45,55 @@ using namespace tmdb;
 
 namespace tmdb
 {
+	template< typename T >
+	struct data_deleter
+	{
+		void operator ()(T const * p)
+		{
+			delete[] p;
+		}
+	};
+
+	struct HostParams
+	{
+		std::string host;
+		std::string accept;
+		std::string url;
+		bool https;
+
+		void fromUrl(std::string url)
+		{
+			std::vector<std::string> splitstr;
+			boost::algorithm::split(splitstr, url, boost::is_any_of("/"));
+
+			if (splitstr.size() > 2)
+			{
+				host = splitstr.at(2);
+				if (splitstr[0] == "http:")
+				{
+					https = false;
+				}
+				else
+				{
+					https = true;
+				}
+			}
+
+			auto iter = splitstr.begin();
+			std::advance(iter, 3);
+
+			std::stringstream ss;
+
+			while (iter != splitstr.end())
+			{
+				ss << "/";
+				ss << *iter;
+				++iter;
+			}
+
+			this->url = ss.str();
+		}
+	};
 
 	std::string url_encode(const std::wstring &value, bool fixquery = false)
 	{
@@ -100,41 +154,112 @@ namespace tmdb
 #endif
 	}
 
-	class ApiGetJsonPrivate
+	
+
+	class ApiGetPrivate
 	{
 	public:
-		ApiGetJsonPrivate(ApiGetJson *q, bool usessl = TMDB_DEFAULT_SSL)
+		ApiGetPrivate(ApiGet *q, bool usessl = TMDB_DEFAULT_SSL)
 		{
 			_q = q;
 			_usessl = usessl;
 		}
 	public:
 		std::string json(const std::string &url);
-		std::string jsonhttp(const std::string &url);
-		std::string jsonhttps(const std::string &url);
+		std::string http(const HostParams &params, size_t &sz);
+		std::string https(const HostParams &params, size_t &sz);
+		std::shared_ptr<uint8_t> getImage(std::string url, size_t &sz);
+		void saveImage(std::string url, std::string filename);
 	public:
 		std::string _url;
 		std::vector<QueryOption> _options;
-		ApiGetJson *_q;
+		ApiGet *_q;
 		static boost::posix_time::ptime _tp;
 		bool _usessl;
 	};
-	boost::posix_time::ptime ApiGetJsonPrivate::_tp = boost::posix_time::microsec_clock::local_time();
 
+	boost::posix_time::ptime ApiGetPrivate::_tp = boost::posix_time::microsec_clock::local_time();
 
-	std::string ApiGetJsonPrivate::json(const std::string &url)
+	
+
+	std::string ApiGetPrivate::json(const std::string &partialurl)
 	{
+
+		std::string data;
+		HostParams param;
+
+		param.host = "api.themoviedb.org";
+		param.accept = "application/json";
+		param.url = partialurl;
+
+		size_t sz = 0;
+
 #if TMDB_USE_OPENSSL
 		if (_usessl)
 		{
-			return jsonhttps(url);
+			
+			data = https(param, sz);
+		}
+		else
+		{
+#endif
+			data = http(param, sz);
+#if TMDB_USE_OPENSSL
 		}
 #endif
-		return jsonhttp(url);
+		return data;
+
+		return "";
+	}
+
+	std::shared_ptr<uint8_t> ApiGetPrivate::getImage(std::string url, size_t &sz)
+	{
+		HostParams param;
+		param.fromUrl(url);
+		param.accept = "image/jpeg";
+		std::string t;
+		
+		if (param.https)
+		{
+			t = https(param, sz);
+		}
+		else
+		{
+			t = http(param, sz);
+		}
+
+		std::shared_ptr<uint8_t> ret(new uint8_t[sz], data_deleter<uint8_t>());
+
+		uint8_t *r = ret.get();
+		const char *ptr = t.c_str();
+
+		for (size_t i = 0; i < sz; ++i)
+		{
+			r[i] = ptr[i];
+		}
+
+		return ret;
+	}
+
+	void ApiGetPrivate::saveImage(std::string url, std::string filename)
+	{
+		size_t sz = 0;
+		auto r = getImage(url, sz);
+
+		boost::filesystem::path p(filename);
+		boost::filesystem::path parent = p.parent_path();
+		if (!parent.empty())
+		{
+			boost::filesystem::create_directories(parent);
+		}
+
+		std::ofstream ofs(filename, std::ios::binary);
+		ofs.write((char*)r.get(), sz);
+		ofs.close();
 	}
 
 
-	std::string ApiGetJsonPrivate::jsonhttp(const std::string &url)
+	std::string ApiGetPrivate::http(const HostParams &param, size_t &sz)
 	{
 		boost::system::error_code ec;
 
@@ -165,7 +290,7 @@ namespace tmdb
 		boost::asio::io_service service;
 
 		t::tcp::resolver res(service);
-		t::tcp::resolver::query q("api.themoviedb.org", "http");
+		t::tcp::resolver::query q(param.host, "http");
 		t::tcp::resolver::iterator endpointiter = res.resolve(q);
 		
 		t::tcp::socket s(service);
@@ -180,9 +305,9 @@ namespace tmdb
 		s.lowest_layer().set_option(t::tcp::no_delay(true));
 
 		std::stringstream getSS;
-		if (url != "")
+		if (param.url != "")
 		{
-			getSS << url;
+			getSS << param.url;
 		}
 		else
 		{
@@ -209,8 +334,8 @@ namespace tmdb
 		a::streambuf req;
 		std::ostream reqStrm(&req);
 		reqStrm << "GET " << getHeader << " HTTP/1.0\r\n";
-		reqStrm << "Host: " << "api.themoviedb.org" << "\r\n";
-		reqStrm << "Accept: " << "application/json" << "\r\n";
+		reqStrm << "Host: " << param.host << "\r\n";
+		reqStrm << "Accept: " << param.accept << "\r\n";
 		reqStrm << "Connection: close" << "\r\n\r\n";
 
 		a::write(s, req);
@@ -268,36 +393,38 @@ namespace tmdb
 			std::getline(respStrm, header);
 		}
 
+		headersz = resp.size();		
+
+		size_t datalen = contentlength - headersz;
+		
 
 		boost::locale::generator g;
 		std::locale loc = g.generate("en_US.UTF-8");
 
 		std::stringstream bodyss;
 		bodyss.imbue(loc);
-		headersz = resp.size();
-		bodyss << &resp;
+		
 
 		try
 		{
-			a::read(s, resp, a::transfer_exactly(contentlength - headersz));
+			a::read(s, resp, a::transfer_exactly(datalen));
 		}
 		catch (boost::exception &e)
 		{
 			std::cout << boost::diagnostic_information(e) << std::endl;
-		}
+		}	
 
 		bodyss << &resp;
-
+		sz = datalen;
 
 #ifdef _DEBUG
 		std::cout << bodyss.str() << std::endl;
 #endif
-		return bodyss.str();
-		//return bodySS.str();
+		return bodyss.str();		
 	}
 
 
-	std::string ApiGetJsonPrivate::jsonhttps(const std::string &url)
+	std::string ApiGetPrivate::https(const HostParams &param, size_t &sz)
 	{
 #if TMDB_USE_OPENSSL
 		boost::system::error_code ec;
@@ -335,7 +462,7 @@ namespace tmdb
 		boost::asio::io_service service;
 
 		t::tcp::resolver res(service);
-		t::tcp::resolver::query q("api.themoviedb.org", "https");
+		t::tcp::resolver::query q(param.host, "https");
 		t::tcp::resolver::iterator endpointiter = res.resolve(q);
 
 		boost::asio::ssl::stream<t::tcp::socket> s(service, ctx);
@@ -365,9 +492,9 @@ namespace tmdb
 		}
 		
 		std::stringstream getSS;
-		if (url != "")
+		if (param.url != "")
 		{
-			getSS << url;
+			getSS << param.url;
 		}
 		else
 		{
@@ -396,8 +523,8 @@ namespace tmdb
 		a::streambuf req;
 		std::ostream reqStrm(&req);
 		reqStrm << "GET " << getHeader << " HTTP/1.0\r\n";
-		reqStrm << "Host: " << "api.themoviedb.org" << "\r\n";
-		reqStrm << "Accept: " << "application/json" << "\r\n";
+		reqStrm << "Host: " << param.host << "\r\n";
+		reqStrm << "Accept: " << param.accept << "\r\n";
 		reqStrm << "Connection: close" << "\r\n\r\n";
 
 		a::write(s, req);
@@ -477,14 +604,14 @@ namespace tmdb
 
 		bodyss << &resp;
 
+		sz = contentlength - headersz;
 
 #ifdef _DEBUG
 		std::cout << bodyss.str() << std::endl;
 #endif
-		return bodyss.str();
-		//return bodySS.str();
+		return bodyss.str();		
 #else
-		return jsonhttp(url);
+		return http(url);
 #endif//TMDB_USE_OPENSSL
 	}
 }//namespace tmdb
@@ -493,25 +620,25 @@ namespace tmdb
 
 
 
-ApiGetJson::ApiGetJson(bool usessl)
+ApiGet::ApiGet(bool usessl)
 {
-	_p = new ApiGetJsonPrivate(this, usessl);
+	_p = new ApiGetPrivate(this, usessl);
 	_p->_url = "/movie/";
 }
 
-ApiGetJson::~ApiGetJson()
+ApiGet::~ApiGet()
 {
 	delete _p;
 	_p = NULL;
 
 }
 
-std::string ApiGetJson::json(std::string url)
+std::string ApiGet::json(std::string url)
 {
 	return _p->json(url);
 }
 
-void ApiGetJson::addOption(const std::string &key, const std::string &value)
+void ApiGet::addOption(const std::string &key, const std::string &value)
 {
 	QueryOption opt;
 	opt.first = key;
@@ -520,27 +647,38 @@ void ApiGetJson::addOption(const std::string &key, const std::string &value)
 	_p->_options.push_back(opt);
 }
 
-void ApiGetJson::addOption(const QueryOption &option)
+void ApiGet::addOption(const QueryOption &option)
 {
 	_p->_options.push_back(option);
 }
 
-void ApiGetJson::clearOptions()
+void ApiGet::clearOptions()
 {
 	_p->_options.clear();
 }
 
-void ApiGetJson::setDefaultUrl(const std::string &url)
+void ApiGet::setDefaultUrl(const std::string &url)
 {
 	_p->_url = url;
 }
 
-void ApiGetJson::setSSL(const bool use)
+void ApiGet::setSSL(const bool use)
 {
 	_p->_usessl = use;
 }
 
-bool ApiGetJson::getSSL()
+bool ApiGet::getSSL()
 {
 	return _p->_usessl;
+}
+
+std::shared_ptr<uint8_t> ApiGet::getImage(std::string url, size_t &sz)
+{
+	
+	return _p->getImage(url, sz);
+}
+
+void ApiGet::saveImage(std::string url, std::string filename)
+{
+	_p->saveImage(url, filename);
 }
