@@ -5,6 +5,9 @@
 #include <tmdb/movie/Movie.h>
 #include <tmdb/movie/Types.h>
 #include <tmdb/configuration.h>
+#include <tmdb/ApiGet.h>
+
+#include <boost/filesystem.hpp>
 
 using namespace tmdb;
 
@@ -129,6 +132,45 @@ TEST(Configuration, Configuration)
 		<< "/mGN0lH2phYfesyEVqP2xvGUaxAQ.jpg";
 
 	EXPECT_EQ(ss.str(), url);
+
+	delete m;
+}
+
+TEST(ImageDownloader, ImageDownloader)
+{
+	Movie *m = new Movie();
+	m->setId(101);
+
+	std::shared_ptr<data::Movie> ms = m->scanMainMovie();
+
+	std::string partialurl = ms->backdrop_path;
+
+	Configuration &c = ConfigurationSingleton::get_mutable_instance();
+
+	std::string url =
+		c.getImageUrl(ImageTypeBackdrop, ImageMedium, partialurl);
+
+	ApiGet &api = ApiGetSingleton::get_mutable_instance();
+
+	api.clearOptions();
+
+	std::string filename("test.jpg");
+	boost::filesystem::path p(filename);
+	api.saveImage(url, p.string());
+
+	
+
+	bool exists = boost::filesystem::exists(p);
+
+	ASSERT_NE(exists, false);
+
+	if ( exists && boost::filesystem::is_regular_file(p))
+	{
+		uint64_t sz = boost::filesystem::file_size(p);
+
+		ASSERT_GT(sz, 0);
+	}
+	
 
 	delete m;
 }
