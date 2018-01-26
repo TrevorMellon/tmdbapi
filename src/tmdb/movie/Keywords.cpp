@@ -9,7 +9,7 @@
 ******************************************************/
 
 #include "tmdb/movie/Keywords.h"
-#include "tmdb/ApiGetJson.h"
+#include "tmdb/ApiGet.h"
 
 # include <rapidjson/rapidjson.h>
 # include <rapidjson/document.h>
@@ -35,7 +35,7 @@ namespace tmdb
 		data::KeywordList get(uint64_t key)
 		{
 			data::KeywordList kl;
-			ApiGetJson &api = ApiGetJsonSingleton::get_mutable_instance();
+			ApiGet &api = ApiGetSingleton::get_mutable_instance();
 
 			std::stringstream ssurl;
 

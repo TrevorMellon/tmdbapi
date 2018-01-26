@@ -21,7 +21,7 @@
 #include <fstream>
 #include <algorithm>
 
-#include <tmdb/ApiGetJson.h>
+#include <tmdb/ApiGet.h>
 #include <tmdb/movie/CastNCrew.h>
 #include <tmdb/movie/Videos.h>
 #include <tmdb/movie/Keywords.h>
@@ -41,13 +41,13 @@ namespace tmdb
 	public:
 		data::MovieCombined _data;
 		std::vector<data::Movie> _searchResults;
-		ApiGetJson* _tmdbapi;
+		ApiGet* _tmdbapi;
 		Movie *_q;
 	public:
 		MovieKPrivate(Movie *q)
 		{
 			_q = q;
-			_tmdbapi = &ApiGetJsonSingleton::get_mutable_instance();
+			_tmdbapi = &ApiGetSingleton::get_mutable_instance();
 			_data.zero();
 			_searchResults.clear();
 		}

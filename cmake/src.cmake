@@ -1,16 +1,18 @@
 
 SET (SRC_T 
-	${PROJECT_SOURCE_DIR}/src/tmdb/ApiGetJson.cpp
-	${PROJECT_SOURCE_DIR}/src/tmdb/configuration.cpp
-	${PROJECT_SOURCE_DIR}/src/tmdb/iso.cpp
+	${PROJECT_SOURCE_DIR}/src/tmdb/ApiGet.cpp
+	${PROJECT_SOURCE_DIR}/src/tmdb/Configuration.cpp
+	${PROJECT_SOURCE_DIR}/src/tmdb/Iso.cpp
+	${PROJECT_SOURCE_DIR}/src/tmdb/ImageDownloader.cpp
 )
 
 SET (INC_T
-	${PROJECT_SOURCE_DIR}/include/tmdb/ApiGetJson.h
-	${PROJECT_SOURCE_DIR}/include/tmdb/util.h
-	${PROJECT_SOURCE_DIR}/include/tmdb/configuration.h
-	${PROJECT_SOURCE_DIR}/include/tmdb/iso.h
-	${PROJECT_SOURCE_DIR}/include/tmdb/isoTypes.h
+	${PROJECT_SOURCE_DIR}/include/tmdb/ApiGet.h
+	${PROJECT_SOURCE_DIR}/include/tmdb/Util.h
+	${PROJECT_SOURCE_DIR}/include/tmdb/Configuration.h
+	${PROJECT_SOURCE_DIR}/include/tmdb/Iso.h
+	${PROJECT_SOURCE_DIR}/include/tmdb/IsoTypes.h
+	${PROJECT_SOURCE_DIR}/include/tmdb/ImageDownloader.h
 	
 	${PROJECT_SOURCE_DIR}/include/tmdb/config.h	
 )

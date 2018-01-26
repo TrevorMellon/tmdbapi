@@ -1,7 +1,7 @@
 
 #include <tmdb/config.h>
 #include <tmdb/configuration.h>
-#include <tmdb/ApiGetJson.h>
+#include <tmdb/ApiGet.h>
 
 #include <rapidjson/rapidjson.h>
 #include <rapidjson/document.h>
@@ -16,7 +16,7 @@ namespace tmdb
 	public:
 		ConfigurationPrivate(const bool usessl = TMDB_DEFAULT_SSL)
 		{
-			ApiGetJson &api = ApiGetJsonSingleton::get_mutable_instance();
+			ApiGet &api = ApiGetSingleton::get_mutable_instance();
 			api.clearOptions();
 			std::string j = api.json("/3/configuration");
 			parse(j);

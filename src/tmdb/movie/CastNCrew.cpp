@@ -9,7 +9,7 @@
 ******************************************************/
 
 #include "tmdb/movie/CastNCrew.h"
-#include "tmdb/ApiGetJson.h"
+#include "tmdb/ApiGet.h"
 #include "tmdb/util.h"
 
 #include <sstream>
@@ -135,7 +135,7 @@ data::CastNCrew CastNCrew::get(uint64_t movieid)
 
 	ss << "/3/movie/" << movieid << "/credits";
 
-	ApiGetJson &api = ApiGetJsonSingleton::get_mutable_instance();
+	ApiGet &api = ApiGetSingleton::get_mutable_instance();
 	api.clearOptions();
 	
 	std::string j = api.json(ss.str());

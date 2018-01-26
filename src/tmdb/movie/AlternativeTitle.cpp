@@ -14,7 +14,7 @@
 #include <rapidjson/document.h>
 
 #include <tmdb/movie/AlternativeTitle.h>
-#include <tmdb/ApiGetJson.h>
+#include <tmdb/ApiGet.h>
 
 #include "tmdb/util.h"
 
@@ -23,7 +23,7 @@ using namespace rapidjson;
 
 data::AlternativeTitles AlternativesTitle::get(const uint64_t id)
 {
-	ApiGetJson &api = ApiGetJsonSingleton::get_mutable_instance();
+	ApiGet &api = ApiGetSingleton::get_mutable_instance();
 
 	api.clearOptions();
 

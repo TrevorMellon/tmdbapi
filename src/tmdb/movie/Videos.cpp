@@ -10,7 +10,7 @@
 
 #include "tmdb/movie/Videos.h"
 
-#include "tmdb/ApiGetJson.h"
+#include "tmdb/ApiGet.h"
 
 #include <sstream>
 
@@ -33,7 +33,7 @@ namespace tmdb
 
 		data::VideosList get(uint64_t movie_id)
 		{
-			ApiGetJson &api = ApiGetJsonSingleton::get_mutable_instance();
+			ApiGet &api = ApiGetSingleton::get_mutable_instance();
 
 			std::stringstream ss;
 			ss << "/3/movie/" << movie_id << "/videos";

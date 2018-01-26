@@ -22,7 +22,7 @@
 namespace tmdb
 {
 	class MovieKPrivate;
-	class ApiGetJson;
+	class ApiGet;
 
 	class Movie
 	{
