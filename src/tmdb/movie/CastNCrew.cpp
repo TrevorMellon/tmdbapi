@@ -136,7 +136,6 @@ data::CastNCrew CastNCrew::get(uint64_t movieid)
 	ss << "/3/movie/" << movieid << "/credits";
 
 	ApiGet &api = ApiGetSingleton::get_mutable_instance();
-	api.clearOptions();
 	
 	std::string j = api.json(ss.str());
 

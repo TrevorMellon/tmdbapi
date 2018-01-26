@@ -16,8 +16,7 @@ namespace tmdb
 	public:
 		ConfigurationPrivate(const bool usessl = TMDB_DEFAULT_SSL)
 		{
-			ApiGet &api = ApiGetSingleton::get_mutable_instance();
-			api.clearOptions();
+			ApiGet &api = ApiGetSingleton::get_mutable_instance();			
 			std::string j = api.json("/3/configuration");
 			parse(j);
 		}

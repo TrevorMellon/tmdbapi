@@ -570,6 +570,16 @@ namespace tmdb
 				movie.id = id;
 				crew.id = id;
 			}
+
+			MovieCombined &operator = (const MovieCombined &other)
+			{
+				this->movie = other.movie;
+				this->crew = other.crew;
+				this->alt_titles = other.alt_titles;
+				this->videos = other.videos;
+				this->queryString = other.queryString;
+				this->year = other.year;
+			}
 		};
 
 	}//namespace data

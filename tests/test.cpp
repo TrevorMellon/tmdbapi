@@ -33,13 +33,14 @@ TEST(MovieApi, Movie)
 {
 	Movie *m = new Movie();
 
-	m->setId(101);
+	std::shared_ptr<data::MovieCombined> cb(new data::MovieCombined);
+	cb->setId(101);
 
-	auto mo = m->scanMainMovie();
+	auto mo = m->scan(cb, tmdb::Movie::MovieScan);
 
-	EXPECT_EQ(101, mo->id);
+	EXPECT_EQ(101, mo->movie.id);
 
-	ASSERT_NE(mo->title, "");
+	ASSERT_NE(mo->movie.title, "");
 
 	delete m;
 }
@@ -48,13 +49,14 @@ TEST(MovieApi, CastAndCrew)
 {
 	Movie *m = new Movie();
 
-	m->setId(101);
+	std::shared_ptr<data::MovieCombined> cb(new data::MovieCombined);
+	cb->setId(101);
 
-	auto mo = m->scanCastAndCrew();
+	auto mo = m->scan(cb, Movie::CastScan);
 
-	EXPECT_EQ(101, mo->id);
+	EXPECT_EQ(101, mo->crew.id);
 
-	ASSERT_NE(mo->cast.at(0).name, "");
+	ASSERT_NE(mo->crew.cast.at(0).name, "");
 
 	delete m;
 }
@@ -63,11 +65,12 @@ TEST(MovieApi, AlternativeTitle)
 {
 	Movie *m = new Movie();
 
-	m->setId(101);
+	std::shared_ptr<data::MovieCombined> cb(new data::MovieCombined);
+	cb->setId(101);
 
-	auto mo = m->scanAlternativeTitles();
+	auto mo = m->scan(cb, Movie::AltTitlesScan);
 
-	data::AlternativeTitle alt = mo->titles.at(0);
+	data::AlternativeTitle alt = mo->alt_titles.titles.at(0);
 
 	ASSERT_NE("", alt.iso_3166_1);
 
@@ -80,11 +83,12 @@ TEST(MovieApi, Videos)
 {
 	Movie *m = new Movie();
 
-	m->setId(101);
+	std::shared_ptr<data::MovieCombined> cb(new data::MovieCombined);
+	cb->setId(101);
 
-	auto mo = m->scanVideos();
+	auto mo = m->scan(cb, Movie::VideosScan);
 
-	data::VideosData &vid = mo->videos.at(0);
+	data::VideosData &vid = mo->videos.videos.at(0);
 
 	EXPECT_GT(vid.id, 0);
 
@@ -97,11 +101,12 @@ TEST(MovieApi, Keywords)
 {
 	Movie *m = new Movie();
 
-	m->setId(101);
+	std::shared_ptr<data::MovieCombined> cb(new data::MovieCombined);
+	cb->setId(101);
 
-	auto mo = m->scanKeywords();
+	auto mo = m->scan(cb, Movie::KeywordsScan);
 
-	data::KeywordPair &kw = mo->at(0);
+	data::KeywordPair &kw = mo->keywords.at(0);
 
 	EXPECT_GT(kw.first, 0);
 
@@ -114,11 +119,12 @@ TEST(Configuration, Configuration)
 {
 	Movie *m = new Movie();
 
-	m->setId(101);	
+	std::shared_ptr<data::MovieCombined> cb(new data::MovieCombined);
+	cb->setId(101);
 
-	std::shared_ptr<data::Movie> ms = m->scanMainMovie();
+	auto ms = m->scan(cb, Movie::MovieScan);
 
-	std::string partialurl = ms->backdrop_path;
+	std::string partialurl = ms->movie.backdrop_path;
 
 	Configuration &c = ConfigurationSingleton::get_mutable_instance();
 
@@ -139,26 +145,24 @@ TEST(Configuration, Configuration)
 TEST(ImageDownloader, ImageDownloader)
 {
 	Movie *m = new Movie();
-	m->setId(101);
 
-	std::shared_ptr<data::Movie> ms = m->scanMainMovie();
+	std::shared_ptr<data::MovieCombined> cb(new data::MovieCombined);
+	cb->setId(101);
 
-	std::string partialurl = ms->backdrop_path;
+	auto ms = m->scan(cb, Movie::MovieScan);
+
+	std::string partialurl = ms->movie.backdrop_path;
 
 	Configuration &c = ConfigurationSingleton::get_mutable_instance();
 
 	std::string url =
 		c.getImageUrl(ImageTypeBackdrop, ImageMedium, partialurl);
 
-	ApiGet &api = ApiGetSingleton::get_mutable_instance();
-
-	api.clearOptions();
+	ApiGet &api = ApiGetSingleton::get_mutable_instance();	
 
 	std::string filename("test.jpg");
 	boost::filesystem::path p(filename);
-	api.saveImage(url, p.string());
-
-	
+	api.saveImage(url, p.string());	
 
 	bool exists = boost::filesystem::exists(p);
 
@@ -169,8 +173,7 @@ TEST(ImageDownloader, ImageDownloader)
 		uint64_t sz = boost::filesystem::file_size(p);
 
 		ASSERT_GT(sz, 0);
-	}
-	
+	}	
 
 	delete m;
 }

@@ -45,20 +45,16 @@ namespace tmdb
 		uint64_t search(::std::wstring title, int32_t year = -1);
 		std::vector<data::Movie> getSearchResults();
 	public:
-		void setId(uint64_t id);
-		data::MovieCombined data();
-		void setData(const data::MovieCombined& data);
+		std::shared_ptr<data::MovieCombined> scan(std::shared_ptr<data::MovieCombined> data, ScanTypes type = MovieScan);
 	public:
-		void scan(ScanTypes type = MovieScan);
-	public:
-		std::shared_ptr<data::Movie> scanMainMovie();
-		std::shared_ptr<data::AlternativeTitles> scanAlternativeTitles();
-		std::shared_ptr<data::CastNCrew> scanCastAndCrew();
-		std::shared_ptr<data::VideosList> scanVideos();
-		std::shared_ptr<data::KeywordList> scanKeywords();
-	public:
-		std::string toJson(ScanTypes type = MovieScan);
-		bool fromJson(::std::string j, ScanTypes type = MovieScan);
+		/*
+		std::shared_ptr<data::Movie>				scanMainMovie();
+		std::shared_ptr<data::AlternativeTitles>	scanAlternativeTitles();
+		std::shared_ptr<data::CastNCrew>			scanCastAndCrew();
+		std::shared_ptr<data::VideosList>			scanVideos();
+		std::shared_ptr<data::KeywordList>			scanKeywords();
+		*/
+
 	private:
 		MovieKPrivate		*_p;
 	};

@@ -41,8 +41,7 @@
 namespace a = boost::asio;
 namespace t = boost::asio::ip;
 
-boost::mutex mtx;
-boost::mutex imagesaveMtx;
+
 
 using namespace tmdb;
 
@@ -179,6 +178,8 @@ namespace tmdb
 		ApiGet *_q;
 		static boost::posix_time::ptime _tp;
 		bool _usessl;
+		boost::mutex mtx;
+		boost::mutex imagesaveMtx;
 	};
 
 	boost::posix_time::ptime ApiGetPrivate::_tp = boost::posix_time::microsec_clock::local_time();
@@ -640,16 +641,6 @@ ApiGet::~ApiGet()
 std::string ApiGet::json(std::string url, const QueryOptions &opt)
 {
 	return _p->json(url, opt);
-}
-
-void ApiGet::clearOptions()
-{
-	_p->_options.clear();
-}
-
-void ApiGet::setDefaultUrl(const std::string &url)
-{
-	_p->_url = url;
 }
 
 void ApiGet::setSSL(const bool use)

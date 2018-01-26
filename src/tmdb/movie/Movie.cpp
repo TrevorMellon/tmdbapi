@@ -33,11 +33,15 @@
 # include <rapidjson/rapidjson.h>
 # include <rapidjson/document.h>
 
+
+
 namespace tmdb
 {
 
 	class MovieKPrivate
 	{
+	public:
+		boost::mutex mtx;
 	public:
 		data::MovieCombined _data;
 		std::vector<data::Movie> _searchResults;
@@ -161,7 +165,7 @@ namespace tmdb
 
 		uint64_t search(std::wstring title, int32_t year /*= -1*/)
 		{
-			_tmdbapi->clearOptions();
+			mtx.lock();			
 
 			std::string t = boost::locale::conv::utf_to_utf<char>(title);
 
@@ -188,6 +192,7 @@ namespace tmdb
 			}
 			catch (...)
 			{
+				mtx.unlock();
 				return 0;
 			}			
 
@@ -213,9 +218,12 @@ namespace tmdb
 				}
 				catch (...)
 				{
+					mtx.unlock();
 					return 0;
 				}
 			}
+
+			mtx.unlock();
 			return i;
 		}
 
@@ -277,55 +285,64 @@ namespace tmdb
 			}
 		}
 
-		data::MovieCombined scan(Movie::ScanTypes type = Movie::MovieScan)
+		std::shared_ptr<data::MovieCombined> scan(std::shared_ptr<data::MovieCombined> data, Movie::ScanTypes type = Movie::MovieScan)
 		{
+			mtx.lock();
+
+			//data::MovieCombined data;
+			if (!data->verifyID())
+			{
+				return data;
+			}
+
 			if (type == Movie::MovieScan || type == Movie::AllScan)
 			{
 				data::Movie m;
 				m.zero();
-				if (_data.id() != 0)
+				if (data->id() != 0)
 				{
-					m = scanMainMovieParse(_data.id());
+					m = scanMainMovieParse(data->id());
 				}
-				_data.movie = m;
+				data->movie = m;
 			}
 			if (type == Movie::CastScan || type == Movie::AllScan)
 			{
 				data::CastNCrew ccz;
 				ccz.zero();
-				ccz.id = _data.id();
+				ccz.id = data->id();
 
 				CastNCrew cc;
-				if (_data.id() != 0)
+				if (data->id() != 0)
 				{
-					ccz = cc.get(_data.id());
+					ccz = cc.get(data->id());
 				}
-				_data.crew = ccz;
+				data->crew = ccz;
 			}
 			if (type == Movie::VideosScan || type == Movie::AllScan)
 			{
 				Videos v;
-				_data.videos = v.get(_data.id());
+				data->videos = v.get(data->id());
 			}
 			if (type == Movie::KeywordsScan || type == Movie::AllScan)
 			{
 				Keywords k;
-				_data.keywords = k.get(_data.id());
+				data->keywords = k.get(data->id());
 			}
 			if (type == Movie::AltTitlesScan || type == Movie::AllScan)
 			{
-				_data.alt_titles = AlternativesTitle::get(_data.id());
-			}
+				data->alt_titles = AlternativesTitle::get(data->id());
+			}			
 
-			return _data;
+			mtx.unlock();
+
+			return data;
 		}
 
 		data::Movie scanMainMovieParse(uint64_t id)
 		{
 			std::stringstream urlss;
 			urlss << "/3/movie/" << id;
-
-			_tmdbapi->clearOptions();
+			
 			std::string j = _tmdbapi->json(urlss.str());
 
 			data::Movie m;
@@ -605,104 +622,12 @@ std::vector<data::Movie> Movie::getSearchResults()
 	return _p->_searchResults;
 }
 
-void Movie::setId(uint64_t id)
+std::shared_ptr<data::MovieCombined> Movie::scan(std::shared_ptr<data::MovieCombined> data, ScanTypes type)
 {
-	_p->_data.zero();
-	_p->_data.setId(id);
-}
-
-data::MovieCombined Movie::data()
-{
-	return _p->_data;
-}
-
-// \todo
-std::string Movie::toJson(ScanTypes type)
-{
-	return "";
-
-}
-
-bool Movie::fromJson(std::string j, ScanTypes type)
-{
-	if (j.size() < 1)
-	{
-		return false;
-	}
-
-	rapidjson::Document d;
-
-	d.Parse<0>(j.c_str());
-
-	rapidjson::Value &r = d;
-
-	_p->_data.movie = _p->fromMovieJson(r);
-
-	return true;
-}
-
-
-void Movie::scan(ScanTypes type)
-{
-	_p->scan(type);
+	return _p->scan(data, type);
 }
 
 uint64_t Movie::searchFilename(std::wstring fn)
 {
 	return _p->searchFilename(fn);
-}
-
-std::shared_ptr<data::Movie> Movie::scanMainMovie()
-{
-	_p->scan(MovieScan);
-
-	data::MovieCombined &mz = _p->_data;
-
-	std::shared_ptr<data::Movie> ret = std::make_shared<data::Movie>(mz.movie);
-
-	return ret;
-}
-
-std::shared_ptr<data::AlternativeTitles> Movie::scanAlternativeTitles()
-{
-	_p->scan(AltTitlesScan);
-
-	data::MovieCombined &mz = _p->_data;
-
-	std::shared_ptr<data::AlternativeTitles> ret = std::make_shared<data::AlternativeTitles>(mz.alt_titles);
-
-	return ret;
-}
-
-std::shared_ptr<data::CastNCrew> Movie::scanCastAndCrew()
-{
-	_p->scan(CastScan);
-
-	data::MovieCombined &mz = _p->_data;
-
-	std::shared_ptr<data::CastNCrew> ret = std::make_shared<data::CastNCrew>(mz.crew);
-
-	return ret;
-}
-
-std::shared_ptr<data::VideosList> Movie::scanVideos()
-{
-	_p->scan(VideosScan);
-
-	data::MovieCombined &mz = _p->_data;
-
-	std::shared_ptr<data::VideosList> ret = std::make_shared<data::VideosList>(mz.videos);
-
-	return ret;
-}
-
-std::shared_ptr<data::KeywordList> Movie::scanKeywords()
-{
-	_p->scan(KeywordsScan);
-
-	data::MovieCombined &mz = _p->_data;
-
-	std::shared_ptr<data::KeywordList> ret = std::make_shared<data::KeywordList>(mz.keywords);
-
-	return ret;
 }

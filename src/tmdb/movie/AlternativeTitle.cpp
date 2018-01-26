@@ -25,8 +25,6 @@ data::AlternativeTitles AlternativesTitle::get(const uint64_t id)
 {
 	ApiGet &api = ApiGetSingleton::get_mutable_instance();
 
-	api.clearOptions();
-
 	QueryOption opt;
 
 	opt.first = "movieid";
