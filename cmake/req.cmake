@@ -3,7 +3,7 @@ SET (CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake/modules)
 SET(Boost_USE_STATIC_LIBS ON)
 ADD_DEFINITIONS("-DBOOST_ALL_NO_LIB")
 
-find_package(Boost REQUIRED COMPONENTS serialization date_time regex thread locale)
+find_package(Boost REQUIRED COMPONENTS serialization date_time regex thread locale filesystem)
 if (Boost_FOUND)
     include_directories(${Boost_INCLUDE_DIR})
     add_definitions( "-DHAS_BOOST" )
