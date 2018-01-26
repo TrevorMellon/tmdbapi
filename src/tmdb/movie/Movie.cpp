@@ -166,19 +166,21 @@ namespace tmdb
 			std::string t = boost::locale::conv::utf_to_utf<char>(title);
 
 			QueryOption opt("query", t);
-			_tmdbapi->addOption(opt);
+			QueryOptions opts;
+			opts.push_back(opt);
 
 			if (year > 0)
 			{
 				std::stringstream ySS;
 				ySS << year;
 				QueryOption yopt("year", ySS.str());
-				_tmdbapi->addOption(yopt);
+				opts.push_back(yopt);
 			}
 
-			std::string j = _tmdbapi->json("/3/search/movie");
+			std::string url = "/3/search/movie";
 
-			bool retry = false;
+			std::string j = _tmdbapi->json(url, opts);
+
 			uint64_t i = 0;
 			try
 			{
@@ -186,36 +188,23 @@ namespace tmdb
 			}
 			catch (...)
 			{
-				retry = true;
-			}
-
-			if (retry)
-			{
-				boost::this_thread::sleep(boost::posix_time::milliseconds(500));
-				try
-				{
-					i = searchParse(j);
-				}
-				catch (...)
-				{
-					return 0;
-				}
-			}
+				return 0;
+			}			
 
 			if (i == 0 && year>0)
 			{
 
-				_tmdbapi->clearOptions();
+				opts.clear();
 
 				QueryOption opt("query", t);
 
-				_tmdbapi->addOption(opt);
+				opts.push_back(opt);
 
-				j = _tmdbapi->json();
+				j = _tmdbapi->json(url, opts);
 
 				i = searchParse(j);
 			}
-			retry = false;
+			
 			if (i > 0)
 			{
 				try
@@ -224,28 +213,10 @@ namespace tmdb
 				}
 				catch (...)
 				{
-					retry = true;
-				}
-
-				if (retry)
-				{
-					boost::this_thread::sleep(boost::posix_time::milliseconds(500));
-					{
-						try
-						{
-							j = _tmdbapi->json();
-							searchParseData(j);
-						}
-						catch (...)
-						{
-
-						}
-					}
+					return 0;
 				}
 			}
-
 			return i;
-
 		}
 
 		uint64_t searchParse(std::string j)

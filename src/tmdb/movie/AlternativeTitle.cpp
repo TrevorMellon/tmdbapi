@@ -35,12 +35,13 @@ data::AlternativeTitles AlternativesTitle::get(const uint64_t id)
 	ss << id;
 	opt.second = ss.str();
 
-	api.addOption(opt);
+	QueryOptions opts;
+	opts.push_back(opt);
 
 	ss.str("");
 	ss << "/3/movie/" << id << "/alternative_titles";
 
-	std::string j = api.json(ss.str());
+	std::string j = api.json(ss.str(), opts);
 
 	data::AlternativeTitle alttitle;
 	data::AlternativeTitles alttitles;

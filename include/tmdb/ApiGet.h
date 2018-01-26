@@ -18,12 +18,14 @@
 
 #include <string>
 #include <memory>
+#include <vector>
 
 namespace tmdb
 {
 	std::string url_encode(const std::string &value);
 
 	typedef std::pair<std::string, std::string> QueryOption;
+	typedef std::vector<QueryOption> QueryOptions;
 
 	class ApiGetPrivate;	
 
@@ -33,11 +35,9 @@ namespace tmdb
 		ApiGet(bool usessl = TMDB_DEFAULT_SSL);
 		~ApiGet();
 	public:
-		std::string json(std::string partialurl = "");
+		std::string json(std::string partialurl = "", const QueryOptions &opt = QueryOptions());
 		std::shared_ptr<uint8_t> getImage(std::string url, size_t &sz);
 		void saveImage(std::string url, std::string filename);
-		void addOption(const std::string &key, const std::string &value);
-		void addOption(const QueryOption &option);
 		void clearOptions();
 		void setDefaultUrl(const std::string &url);
 	public:

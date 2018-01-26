@@ -41,6 +41,9 @@
 namespace a = boost::asio;
 namespace t = boost::asio::ip;
 
+boost::mutex mtx;
+boost::mutex imagesaveMtx;
+
 using namespace tmdb;
 
 namespace tmdb
@@ -165,9 +168,9 @@ namespace tmdb
 			_usessl = usessl;
 		}
 	public:
-		std::string json(const std::string &url);
-		std::string http(const HostParams &params, size_t &sz);
-		std::string https(const HostParams &params, size_t &sz);
+		std::string json(const std::string &url, const QueryOptions &opt = QueryOptions());
+		std::string http(const HostParams &params, size_t &sz, const QueryOptions &opt = QueryOptions());
+		std::string https(const HostParams &params, size_t &sz, const QueryOptions &opt = QueryOptions());
 		std::shared_ptr<uint8_t> getImage(std::string url, size_t &sz);
 		void saveImage(std::string url, std::string filename);
 	public:
@@ -182,9 +185,9 @@ namespace tmdb
 
 	
 
-	std::string ApiGetPrivate::json(const std::string &partialurl)
+	std::string ApiGetPrivate::json(const std::string &partialurl, const QueryOptions &opt)
 	{
-
+		mtx.lock();
 		std::string data;
 		HostParams param;
 
@@ -198,22 +201,23 @@ namespace tmdb
 		if (_usessl)
 		{
 			
-			data = https(param, sz);
+			data = https(param, sz, opt);
 		}
 		else
 		{
 #endif
-			data = http(param, sz);
+			data = http(param, sz, opt);
 #if TMDB_USE_OPENSSL
 		}
 #endif
-		return data;
+		mtx.unlock();
 
-		return "";
+		return data;
 	}
 
 	std::shared_ptr<uint8_t> ApiGetPrivate::getImage(std::string url, size_t &sz)
 	{
+		mtx.lock();
 		HostParams param;
 		param.fromUrl(url);
 		param.accept = "image/jpeg";
@@ -238,11 +242,14 @@ namespace tmdb
 			r[i] = ptr[i];
 		}
 
+		mtx.unlock();
+
 		return ret;
 	}
 
 	void ApiGetPrivate::saveImage(std::string url, std::string filename)
 	{
+		imagesaveMtx.lock();
 		size_t sz = 0;
 		auto r = getImage(url, sz);
 
@@ -256,10 +263,11 @@ namespace tmdb
 		std::ofstream ofs(filename, std::ios::binary);
 		ofs.write((char*)r.get(), sz);
 		ofs.close();
+		imagesaveMtx.unlock();
 	}
 
 
-	std::string ApiGetPrivate::http(const HostParams &param, size_t &sz)
+	std::string ApiGetPrivate::http(const HostParams &param, size_t &sz, const QueryOptions &opt)
 	{
 		boost::system::error_code ec;
 
@@ -316,8 +324,8 @@ namespace tmdb
 		getSS << "?api_key=" << TMDB_API_KEY;
 
 
-		std::vector<QueryOption>::iterator iter;
-		for (iter = _options.begin(); iter != _options.end(); ++iter)
+		auto iter = opt.begin();
+		for (iter = opt.begin(); iter != opt.end(); ++iter)
 		{
 			std::string key = iter->first;
 			std::string value = iter->second;
@@ -424,7 +432,7 @@ namespace tmdb
 	}
 
 
-	std::string ApiGetPrivate::https(const HostParams &param, size_t &sz)
+	std::string ApiGetPrivate::https(const HostParams &param, size_t &sz, const QueryOptions &opt)
 	{
 #if TMDB_USE_OPENSSL
 		boost::system::error_code ec;
@@ -616,10 +624,6 @@ namespace tmdb
 	}
 }//namespace tmdb
 
-
-
-
-
 ApiGet::ApiGet(bool usessl)
 {
 	_p = new ApiGetPrivate(this, usessl);
@@ -633,23 +637,9 @@ ApiGet::~ApiGet()
 
 }
 
-std::string ApiGet::json(std::string url)
+std::string ApiGet::json(std::string url, const QueryOptions &opt)
 {
-	return _p->json(url);
-}
-
-void ApiGet::addOption(const std::string &key, const std::string &value)
-{
-	QueryOption opt;
-	opt.first = key;
-	opt.second = value;
-
-	_p->_options.push_back(opt);
-}
-
-void ApiGet::addOption(const QueryOption &option)
-{
-	_p->_options.push_back(option);
+	return _p->json(url, opt);
 }
 
 void ApiGet::clearOptions()
