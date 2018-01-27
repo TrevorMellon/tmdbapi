@@ -1,10 +1,7 @@
 find_package(GTest)
 
-include_directories(${GTEST_INCLUDE_DIRS})
-include_directories(../include)
-include_directories(../inl)
-include_directories(${Boost_INCLUDE_DIRS})
-include_directories(${OPENSSL_INCLUDE_DIR})
+
+
 
 #add_definitions(-DTMDB_USE_OPENSSL=1)
 
@@ -18,9 +15,25 @@ target_link_libraries(tmdbtest
 			${GTEST_BOTH_LIBRARIES} 
 			${Boost_LIBRARIES}
 			${ICU_LIBRARIES}
-			${CURL_LIBRARIES}
+			)
+	
+target_include_directories(tmdbtest PUBLIC ${GTEST_INCLUDE_DIRS})
+target_include_directories(tmdbtest PUBLIC ../include)
+target_include_directories(tmdbtest PUBLIC ${Boost_INCLUDE_DIRS})
+	
+if(USING_OPENSSL)
+	target_link_libraries(tmdbtest 
 			${OPENSSL_LIBRARIES}
 			)
+	target_include_directories(tmdbtest PUBLIC ${OPENSSL_INCLUDE_DIR})		
+endif()
+	
+if(USING_CURL)
+	target_link_libraries(tmdbtest 
+			${CURL_LIBRARIES}
+			)
+	target_include_directories(tmdbtest PUBLIC ${CURL_INCLUDE_DIR})
+endif()
 
 add_test(NAME test1 COMMAND ${PROJECT_BINARY_DIR}/tmdbtest)
 
