@@ -17,8 +17,6 @@ elseif(WIN32)
 	find_package(ICU COMPONENTS data uc i18n)
 endif(WIN32)
 
-find_package(CURL)
-
 if(NOT MSVC)
 	SET(RAPIDJSON_USE_SSE42 ON)
 else(MSVC)
@@ -27,7 +25,7 @@ endif(NOT MSVC)
 
 SET (RAPIDJSON_USE_SSE2 ON)
 
-find_package(rapidjson)
+find_package(rapidjson REQUIRED)
 
 include_directories("${RAPIDJSON_INCLUDE_DIRS}")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${RAPIDJSON_CXX_FLAGS}")
