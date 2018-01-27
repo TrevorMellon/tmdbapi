@@ -16,7 +16,7 @@
 #include <tmdb/movie/AlternativeTitle.h>
 #include <tmdb/ApiGet.h>
 
-#include "tmdb/util.h"
+#include "tmdb/Util.h"
 
 using namespace tmdb;
 using namespace rapidjson;

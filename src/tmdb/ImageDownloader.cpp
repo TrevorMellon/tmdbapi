@@ -1,7 +1,7 @@
 
 #include <tmdb/ImageDownloader.h>
-#include <tmdb/iso.h>
-#include <tmdb/configuration.h>
+#include <tmdb/Iso.h>
+#include <tmdb/Configuration.h>
 #include <tmdb/config.h>
 #include <tmdb/ApiGet.h>
 

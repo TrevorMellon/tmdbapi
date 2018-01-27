@@ -10,7 +10,7 @@
 
 #include "tmdb/movie/CastNCrew.h"
 #include "tmdb/ApiGet.h"
-#include "tmdb/util.h"
+#include "tmdb/Util.h"
 
 #include <sstream>
 #include <rapidjson/rapidjson.h>

@@ -4,7 +4,7 @@
 
 #include <tmdb/movie/Movie.h>
 #include <tmdb/movie/Types.h>
-#include <tmdb/configuration.h>
+#include <tmdb/Configuration.h>
 #include <tmdb/ApiGet.h>
 
 #include <boost/filesystem.hpp>

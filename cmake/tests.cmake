@@ -1,8 +1,5 @@
 find_package(GTest)
 
-
-
-
 #add_definitions(-DTMDB_USE_OPENSSL=1)
 
 SET(TEST_SRC ${PROJECT_SOURCE_DIR}/tests/test.cpp)

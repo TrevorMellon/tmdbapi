@@ -4,11 +4,11 @@ project (tmdb)
 
 enable_testing()
 
-option(SONAR "Building for sonar scanner" OFF)
+option(TMDB_TEST "Building for testing" OFF)
 option(USING_OPENSSL "Use openSSL" ON)
 option(USING_CURL "Use CURL library" ON)
 option(DEFAULT_SSL "Default option for ssl" ON)
-option(SSL_PEM_FILE "Location of CA file" "../etc/tmdb.pem")
+set(SSL_PEM_FILE "../etc/tmdb.pem")
 
 if(NOT DEFINED TMDB_API_KEY)
 	message(FATAL_ERROR "TMDB_API_KEY must be defined")
@@ -40,9 +40,9 @@ else(CURL_FOUND AND USING_CURL)
 	SET(USING_CURL 0)
 endif(CURL_FOUND AND USING_CURL)
 
-if(SONAR)
+if(TMDB_TEST)
 	SET(SSL_PEM_FILE ${PROJECT_SOURCE_DIR}/etc/tmdb.pem)
-endif(SONAR)
+endif(TMDB_TEST)
 
 configure_file(templates/config.h.in ${PROJECT_SOURCE_DIR}/include/tmdb/config.h)
 
@@ -52,10 +52,11 @@ include_directories(${Boost_INCLUDE_DIRS})
 #add_definitions(-DTMDB_USE_OPENSSL=1)
 
 add_library(tmdb STATIC ${SOURCES} )
+if(TMDB_TEST)
 
-include(cmake/tests.cmake)
+	include(cmake/tests.cmake)
 
-if(SONAR)
+
 	include(cmake/sonar.cmake)
-endif(SONAR)
+endif(TMDB_TEST)
 

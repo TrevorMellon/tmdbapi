@@ -5,7 +5,7 @@
 #include <string>
 #include <boost/serialization/singleton.hpp>
 
-#include <tmdb/isoTypes.h>
+#include <tmdb/IsoTypes.h>
 
 namespace iso
 {

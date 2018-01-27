@@ -26,7 +26,7 @@
 #include <tmdb/movie/Videos.h>
 #include <tmdb/movie/Keywords.h>
 #include <tmdb/movie/AlternativeTitle.h>
-#include <tmdb/util.h>
+#include <tmdb/Util.h>
 
 #include <sstream>
 

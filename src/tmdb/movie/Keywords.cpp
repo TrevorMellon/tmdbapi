@@ -14,7 +14,7 @@
 # include <rapidjson/rapidjson.h>
 # include <rapidjson/document.h>
 
-#include "tmdb/util.h"
+#include "tmdb/Util.h"
 
 #include <vector>
 #include <sstream>
