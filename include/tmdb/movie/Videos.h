@@ -18,18 +18,17 @@
 
 namespace tmdb
 {
-	class VideosPrivate;
-	
-	class Videos
+	namespace movie
 	{
-	public:
-		Videos();
-		~Videos();
-	public:
-		data::VideosList get(uint64_t movie_id);
-	private:
-		VideosPrivate *_p;
-	};
+		class Videos
+		{
+		public:
+			Videos(){}
+			~Videos(){}
+		public:
+			static movie::types::VideosList get(uint64_t movie_id);		
+		};
+	}
 }
 
 

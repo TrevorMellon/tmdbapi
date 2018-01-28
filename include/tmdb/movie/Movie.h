@@ -21,7 +21,7 @@
 
 namespace tmdb
 {
-	class MovieKPrivate;
+	class MoviePrivate;
 	class ApiGet;
 
 	class Movie
@@ -40,23 +40,11 @@ namespace tmdb
 		Movie();
 		~Movie();
 	public:
-		uint64_t searchFilename(::std::wstring filename);
+		std::vector<movie::types::Movie> search(::std::wstring title, int32_t year = -1);
 	public:
-		uint64_t search(::std::wstring title, int32_t year = -1);
-		std::vector<data::Movie> getSearchResults();
-	public:
-		std::shared_ptr<data::MovieCombined> scan(std::shared_ptr<data::MovieCombined> data, ScanTypes type = MovieScan);
-	public:
-		/*
-		std::shared_ptr<data::Movie>				scanMainMovie();
-		std::shared_ptr<data::AlternativeTitles>	scanAlternativeTitles();
-		std::shared_ptr<data::CastNCrew>			scanCastAndCrew();
-		std::shared_ptr<data::VideosList>			scanVideos();
-		std::shared_ptr<data::KeywordList>			scanKeywords();
-		*/
-
+		std::shared_ptr<movie::types::Combined> scan(std::shared_ptr<movie::types::Combined> &data, ScanTypes type = MovieScan);
 	private:
-		MovieKPrivate		*_p;
+		MoviePrivate		*_p;
 	};
 
 }//namespace tmdb

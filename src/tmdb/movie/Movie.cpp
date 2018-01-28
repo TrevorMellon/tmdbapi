@@ -38,17 +38,17 @@
 namespace tmdb
 {
 
-	class MovieKPrivate
+	class MoviePrivate
 	{
 	public:
 		boost::mutex mtx;
 	public:
-		data::MovieCombined _data;
-		std::vector<data::Movie> _searchResults;
+		movie::types::Combined _data;
+		std::vector<movie::types::Movie> _searchResults;
 		ApiGet* _tmdbapi;
 		Movie *_q;
 	public:
-		MovieKPrivate(Movie *q)
+		MoviePrivate(Movie *q)
 		{
 			_q = q;
 			_tmdbapi = &ApiGetSingleton::get_mutable_instance();
@@ -56,116 +56,11 @@ namespace tmdb
 			_searchResults.clear();
 		}
 	public:
-		uint64_t searchFilename(std::wstring fn)
+		std::vector<movie::types::Movie> search(std::wstring title, int32_t year /*= -1*/)
 		{
-			std::cout << std::endl;
-			std::cout << "Searching for filename:";
-			std::wcout << fn << std::endl;
-			
-			boost::cmatch m;
-			boost::wregex r(L"\\.");
+			mtx.lock();	
 
-			boost::wsregex_token_iterator rb(fn.begin(), fn.end(), r, -1);
-			boost::wsregex_token_iterator re;
-
-			//break by separator, title should be first
-			std::wstring nm1 = *rb;
-
-			++rb;
-
-			while (rb != re)
-			{
-				++rb;
-			}
-			
-			//Remove underscores
-			boost::wregex r2(L"_");
-
-			boost::wsregex_token_iterator rb2(nm1.begin(), nm1.end(), r2, -1);
-
-			std::wstringstream ss;
-			ss << *rb2;
-			rb2++;
-			while (rb2 != re)
-			{
-				ss << " ";
-				ss << *rb2;
-				rb2++;
-			}
-			
-			std::wstring tstr = ss.str();
-			//find year
-
-			std::wstring::iterator yeariter = tstr.end();
-			--yeariter;
-			int year;
-			bool found = false;
-			if (tstr.size() > 5)
-			{
-				wchar_t y[5];
-				memset(y, 0, sizeof(wchar_t) * 5);
-
-				if (*yeariter == ')')
-				{
-					int ct = 1;
-					--yeariter;
-					while (true)
-					{
-
-						if (*yeariter == '(')
-						{
-							break;
-						}
-						if (ct > 4)
-						{
-							break;
-						}
-						if (*(yeariter - 1) == '(' && ct == 4)
-						{
-							found = true;
-						}
-						y[3 - (ct - 1)] = *yeariter;
-						++ct;
-						--yeariter;
-					}
-				}
-				y[4] = '\0';
-				try
-				{
-					year = boost::lexical_cast<int>(y);
-					tstr.assign(tstr.begin(), yeariter);
-				}
-				catch (...)
-				{
-					found = false;
-				}
-			}
-
-			if (found)
-			{
-				std::wstring title = tstr;
-
-				std::cout << "Search: " << "t=";
-				std::wcout << title << " & y=" << year;
-				std::cout << std::endl;
-				
-				return search(title, year);
-			}
-			else
-			{
-				std::wstring title = tstr;
-				
-				std::cout << "Search: " << "t=";
-				std::wcout << title;
-				std::cout << std::endl;
-
-				return search(title, 0);
-			}
-		}
-
-		uint64_t search(std::wstring title, int32_t year /*= -1*/)
-		{
-			mtx.lock();			
+			std::vector<movie::types::Movie> movies;
 
 			std::string t = boost::locale::conv::utf_to_utf<char>(title);
 
@@ -193,7 +88,7 @@ namespace tmdb
 			catch (...)
 			{
 				mtx.unlock();
-				return 0;
+				return movies;
 			}			
 
 			if (i == 0 && year>0)
@@ -214,17 +109,17 @@ namespace tmdb
 			{
 				try
 				{
-					searchParseData(j);
+					movies = searchParseData(j);
 				}
 				catch (...)
 				{
 					mtx.unlock();
-					return 0;
+					return movies;
 				}
 			}
 
 			mtx.unlock();
-			return i;
+			return movies;
 		}
 
 		uint64_t searchParse(std::string j)
@@ -255,19 +150,16 @@ namespace tmdb
 			return 0;
 		}
 
-		void searchParseData(std::string j)
+		std::vector<movie::types::Movie> searchParseData(std::string j)
 		{
+			std::vector<movie::types::Movie> movies;
+			
 			if (j.empty())
 			{
-				return;
+				return movies;
 			}
 
-			_searchResults.clear();
-
-			if (j.size() < 1)
-			{
-				return;
-			}
+			_searchResults.clear();			
 
 			rapidjson::Document d;
 			d.Parse<0>(j.c_str());
@@ -279,13 +171,15 @@ namespace tmdb
 				for (rapidjson::SizeType ii = 0; ii < r1.Size(); ++ii)
 				{
 					rapidjson::Value &r = r1[ii];
-					data::Movie data = fromMovieJson(r);
-					_searchResults.push_back(data);
+					movie::types::Movie data = fromMovieJson(r);
+					movies.push_back(data);
 				}
 			}
+
+			return movies;
 		}
 
-		std::shared_ptr<data::MovieCombined> scan(std::shared_ptr<data::MovieCombined> data, Movie::ScanTypes type = Movie::MovieScan)
+		std::shared_ptr<movie::types::Combined> scan(std::shared_ptr<movie::types::Combined> &data, Movie::ScanTypes type = Movie::MovieScan)
 		{
 			mtx.lock();
 
@@ -297,7 +191,7 @@ namespace tmdb
 
 			if (type == Movie::MovieScan || type == Movie::AllScan)
 			{
-				data::Movie m;
+				movie::types::Movie m;
 				m.zero();
 				if (data->id() != 0)
 				{
@@ -307,11 +201,11 @@ namespace tmdb
 			}
 			if (type == Movie::CastScan || type == Movie::AllScan)
 			{
-				data::CastNCrew ccz;
+				movie::types::CastNCrew ccz;
 				ccz.zero();
 				ccz.id = data->id();
 
-				CastNCrew cc;
+				movie::CastNCrew cc;
 				if (data->id() != 0)
 				{
 					ccz = cc.get(data->id());
@@ -320,17 +214,17 @@ namespace tmdb
 			}
 			if (type == Movie::VideosScan || type == Movie::AllScan)
 			{
-				Videos v;
+				movie::Videos v;
 				data->videos = v.get(data->id());
 			}
 			if (type == Movie::KeywordsScan || type == Movie::AllScan)
 			{
-				Keywords k;
+				movie::Keywords k;
 				data->keywords = k.get(data->id());
 			}
 			if (type == Movie::AltTitlesScan || type == Movie::AllScan)
 			{
-				data->alt_titles = AlternativesTitle::get(data->id());
+				data->alt_titles = movie::AlternativesTitle::get(data->id());
 			}			
 
 			mtx.unlock();
@@ -338,14 +232,14 @@ namespace tmdb
 			return data;
 		}
 
-		data::Movie scanMainMovieParse(uint64_t id)
+		movie::types::Movie scanMainMovieParse(uint64_t id)
 		{
 			std::stringstream urlss;
 			urlss << "/3/movie/" << id;
 			
 			std::string j = _tmdbapi->json(urlss.str());
 
-			data::Movie m;
+			movie::types::Movie m;
 			m.zero();
 
 			bool retry = false;
@@ -393,9 +287,9 @@ namespace tmdb
 		}
 
 
-		data::Movie fromMovieJson(rapidjson::Value &r)
+		movie::types::Movie fromMovieJson(rapidjson::Value &r)
 		{
-			data::Movie data;
+			movie::types::Movie data;
 			data.zero();
 			if (rjcheck(r, "id"))
 			{
@@ -414,7 +308,7 @@ namespace tmdb
 			if (rjcheck(r, "belongs_to_collection"))
 			{
 				rapidjson::Value &rr = r["belongs_to_collection"];
-				data::MovieCollection col;
+				movie::types::Collection col;
 				col.id = 0;
 				if (rjcheck(rr, "id"))
 				{
@@ -444,7 +338,7 @@ namespace tmdb
 				rapidjson::Value &rr = r["genres"];
 				for (rapidjson::SizeType i = 0; i < rr.Size(); ++i)
 				{
-					data::MovieGenre g;
+					movie::types::Genre g;
 					rapidjson::Value &rrr = rr[i];
 
 					if (rjcheck(rrr, "id"))
@@ -491,7 +385,7 @@ namespace tmdb
 				rapidjson::Value &rr = r["production_companies"];
 				for (rapidjson::SizeType i = 0; i < rr.Size(); ++i)
 				{
-					data::MovieProductionCompany t;
+					movie::types::ProductionCompany t;
 					rapidjson::Value &rrr = rr[i];
 
 					if (rjcheck(rrr, "name"))
@@ -513,7 +407,7 @@ namespace tmdb
 				for (rapidjson::SizeType i = 0; i < rr.Size(); ++i)
 				{
 					rapidjson::Value &rrr = rr[i];
-					data::MovieProductionCountry p;
+					movie::types::ProductionCountry p;
 					if (rjcheck(rrr, "iso_3166_1"))
 					{
 						p.iso = rrr["iso_3166_1"].GetString();
@@ -548,7 +442,7 @@ namespace tmdb
 				for (rapidjson::SizeType i = 0; i < rr.Size(); ++i)
 				{
 					rapidjson::Value &rrr = rr[i];
-					data::MovieLanguages lang;
+					movie::types::Languages lang;
 					if (rjcheck(rrr, "iso_639_1"))
 					{
 						lang.iso = rrr["iso_639_1"].GetString();
@@ -600,7 +494,7 @@ using namespace tmdb;
 
 Movie::Movie()
 {
-	_p = new MovieKPrivate(this);
+	_p = new MoviePrivate(this);
 }
 
 Movie::~Movie()
@@ -612,22 +506,14 @@ Movie::~Movie()
 	_p = NULL;
 }
 
-uint64_t Movie::search(std::wstring title, int32_t year /*= -1*/)
+std::vector<movie::types::Movie> Movie::search(std::wstring title, int32_t year /*= -1*/)
 {
 	return _p->search(title, year);
 }
 
-std::vector<data::Movie> Movie::getSearchResults()
-{
-	return _p->_searchResults;
-}
-
-std::shared_ptr<data::MovieCombined> Movie::scan(std::shared_ptr<data::MovieCombined> data, ScanTypes type)
+std::shared_ptr<movie::types::Combined> Movie::scan(std::shared_ptr<movie::types::Combined> &data, ScanTypes type)
 {
 	return _p->scan(data, type);
 }
 
-uint64_t Movie::searchFilename(std::wstring fn)
-{
-	return _p->searchFilename(fn);
-}
+

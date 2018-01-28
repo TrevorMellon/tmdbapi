@@ -20,14 +20,16 @@
 
 namespace tmdb
 {
-
-	class CastNCrew
+	namespace movie
 	{
-	public:
-		CastNCrew(){}
-	public:
-		static data::CastNCrew get(uint64_t movieid);
-	};
+		class CastNCrew
+		{
+		public:
+			CastNCrew(){}
+		public:
+			static movie::types::CastNCrew get(uint64_t movieid);
+		};
+	}
 }
 
 

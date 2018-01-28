@@ -15,15 +15,13 @@ TEST(SearchApi, SearchMovie)
 {
 	Movie *m = new Movie();
 
-	uint64_t id = m->search(std::wstring(L"Willow"), -1);
+	auto movies = m->search(std::wstring(L"Willow"), -1);
 
-	std::vector<data::Movie> mv = m->getSearchResults();
+	EXPECT_GT(movies.size(), 0);
 
-	EXPECT_GT(mv.size(), 0);
-
-	if (!mv.empty())
+	if (!movies.empty())
 	{
-		EXPECT_EQ(mv.at(0).id, id);
+		EXPECT_EQ(movies.at(0).id, 847);
 	}
 
 	delete m;
@@ -33,12 +31,12 @@ TEST(MovieApi, Movie)
 {
 	Movie *m = new Movie();
 
-	std::shared_ptr<data::MovieCombined> cb(new data::MovieCombined);
+	std::shared_ptr<movie::types::Combined> cb(new movie::types::Combined);
 	cb->setId(101);
 
 	auto mo = m->scan(cb, tmdb::Movie::MovieScan);
 
-	EXPECT_EQ(101, mo->movie.id);
+	ASSERT_EQ(101, mo->movie.id);
 
 	ASSERT_NE(mo->movie.title, "");
 
@@ -49,7 +47,7 @@ TEST(MovieApi, CastAndCrew)
 {
 	Movie *m = new Movie();
 
-	std::shared_ptr<data::MovieCombined> cb(new data::MovieCombined);
+	std::shared_ptr<movie::types::Combined> cb(new movie::types::Combined);
 	cb->setId(101);
 
 	auto mo = m->scan(cb, Movie::CastScan);
@@ -65,12 +63,12 @@ TEST(MovieApi, AlternativeTitle)
 {
 	Movie *m = new Movie();
 
-	std::shared_ptr<data::MovieCombined> cb(new data::MovieCombined);
+	std::shared_ptr<movie::types::Combined> cb(new movie::types::Combined);
 	cb->setId(101);
 
 	auto mo = m->scan(cb, Movie::AltTitlesScan);
 
-	data::AlternativeTitle alt = mo->alt_titles.titles.at(0);
+	movie::types::AlternativeTitle alt = mo->alt_titles.titles.at(0);
 
 	ASSERT_NE("", alt.iso_3166_1);
 
@@ -83,12 +81,12 @@ TEST(MovieApi, Videos)
 {
 	Movie *m = new Movie();
 
-	std::shared_ptr<data::MovieCombined> cb(new data::MovieCombined);
+	std::shared_ptr<movie::types::Combined> cb(new movie::types::Combined);
 	cb->setId(101);
 
 	auto mo = m->scan(cb, Movie::VideosScan);
 
-	data::VideosData &vid = mo->videos.videos.at(0);
+	movie::types::VideosData &vid = mo->videos.videos.at(0);
 
 	EXPECT_GT(vid.id, 0);
 
@@ -101,12 +99,12 @@ TEST(MovieApi, Keywords)
 {
 	Movie *m = new Movie();
 
-	std::shared_ptr<data::MovieCombined> cb(new data::MovieCombined);
+	std::shared_ptr<movie::types::Combined> cb(new movie::types::Combined);
 	cb->setId(101);
 
 	auto mo = m->scan(cb, Movie::KeywordsScan);
 
-	data::KeywordPair &kw = mo->keywords.at(0);
+	movie::types::KeywordPair &kw = mo->keywords.at(0);
 
 	EXPECT_GT(kw.first, 0);
 
@@ -119,7 +117,7 @@ TEST(Configuration, Configuration)
 {
 	Movie *m = new Movie();
 
-	std::shared_ptr<data::MovieCombined> cb(new data::MovieCombined);
+	std::shared_ptr<movie::types::Combined> cb(new movie::types::Combined);
 	cb->setId(101);
 
 	auto ms = m->scan(cb, Movie::MovieScan);
@@ -146,7 +144,7 @@ TEST(ImageDownloader, ImageDownloader)
 {
 	Movie *m = new Movie();
 
-	std::shared_ptr<data::MovieCombined> cb(new data::MovieCombined);
+	std::shared_ptr<movie::types::Combined> cb(new movie::types::Combined);
 	cb->setId(101);
 
 	auto ms = m->scan(cb, Movie::MovieScan);
