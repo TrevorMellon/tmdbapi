@@ -54,6 +54,7 @@ script:
  - mkdir -p build
  - cd build
  - cmake -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Release -DTMDB_API_KEY=${TMDB_KEY} -DTMDB_TEST=ON ..
+ - make
  - ctest -V 
 
 
