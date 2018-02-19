@@ -7,22 +7,23 @@ os:
  - linux
 
 matrix:
-env:
   include:
-   os: linux
-   addons:
-     apt:
-      sources:
-       - ubuntu-toolchain-r-test
-      packages:
-       - g++-7
-   env:
-    - MATRIX_EVAL="CC=gcc-7 && CXX=g++-7"
-   
+   - os: linux
+     addons:
+      apt:
+       sources:
+        - ubuntu-toolchain-r-test
+       packages:
+        - g++-7
+     env:
+      - MATRIX_EVAL="CC=gcc-7 && CXX=g++-7"
+
+
+
 env:
- - MATRIX_EVAL="CC=gcc-7 && CXX=g++-7"
- - RAPID_JSON_URL=https://github.com/Tencent/rapidjson.git
- - GTEST_URL=https://github.com/google/googletest.git
+ global:
+  - RAPID_JSON_URL=https://github.com/Tencent/rapidjson.git
+  - GTEST_URL=https://github.com/google/googletest.git
 
 branches:
  only:
