@@ -1,0 +1,49 @@
+
+language: cpp
+dist: trusty
+compiler:
+ - gcc
+os:
+ - linux
+ 
+env:
+ - MATRIX_EVAL="CC=gcc-7 && CXX=g++-7"
+ - RAPID_JSON_URL=https://github.com/Tencent/rapidjson.git
+ - GTEST_URL=https://github.com/google/googletest.git
+
+addons:
+ apt:
+  sources:
+   - ubuntu-toolchain-r-test
+  packages:
+   - g++-7
+   
+branches:
+  only:
+  - master
+
+before_install:
+  - sudo apt-get -qq update
+  - sudo apt-get install -y libboost-all-dev
+
+script:
+    cd $TRAVIS_BUILD_DIR
+    mkdir sdk
+    cd sdk
+    git clone $RAPID_JSON_URL
+    git clone $GTEST_URL
+    export SDK_DIR=$pwd
+    cd googletest
+    cmake -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$SDK_DIR/gtest .
+    make
+    make install
+    cd ../..
+    export CPATH=$SDK_DIR/gtest/include:$SDK_DIR/rapidjson/include:$CPATH    
+    mkdir -p build
+    cd build
+    cmake
+    cmake -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Release ..
+    
+  
+
+ 
