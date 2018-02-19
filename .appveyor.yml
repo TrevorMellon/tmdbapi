@@ -41,7 +41,7 @@ before_build:
 
 build_script:
  - cmd: cd build
- - cmd: cmake -G "NMake Makefiles" -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=..\ttscmd -DTMDB_API_KEY=%TMDB_KEY% ..
+ - cmd: cmake -G "NMake Makefiles" -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=..\ttscmd -DTMDB_API_KEY=%TMDB_KEY% -DTMDB_TEST=ON ..
  - cmd: nmake
  - cmd: cd ..
  
