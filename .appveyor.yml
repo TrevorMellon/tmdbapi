@@ -46,10 +46,10 @@ build_script:
  - cmd: nmake install
  - cmd: cd ..
  
- test_script:
-  - cmd: cd build
-  - cmd: ctest -V
-  - cmd: cd ..
+test_script:
+ - cmd: cd build
+ - cmd: ctest -V
+ - cmd: cd ..
  
  
 
