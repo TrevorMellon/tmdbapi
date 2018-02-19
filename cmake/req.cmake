@@ -12,14 +12,14 @@ endif (Boost_FOUND)
 
 
 if(WIN32)
-	find_package(ICU REQUIRED COMPONENTS dt uc i18n)
+	find_package(ICU OPTIONAL_COMPONENTS dt uc i18n)
 else(WIN32)
-	find_package(ICU REQUIRED  COMPONENTS data uc i18n)
+	find_package(ICU OPTIONAL_COMPONENTS data uc i18n)
 endif(WIN32)
 
 if(NOT MSVC)
 	SET(RAPIDJSON_USE_SSE42 ON)
-else(MSVC)
+else(NOT MSVC)
 	SET(RAPIDJSON_USE_SSE42 OFF)
 endif(NOT MSVC)
 
