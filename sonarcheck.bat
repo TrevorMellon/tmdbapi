@@ -1,7 +1,7 @@
 call go32
 call addprog cppcheck
 call addprog verapp
-call addqt
+
 
 
 mkdir sonar
