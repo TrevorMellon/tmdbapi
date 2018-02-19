@@ -47,7 +47,7 @@ endif(TMDB_TEST)
 configure_file(templates/config.h.in ${PROJECT_SOURCE_DIR}/include/tmdb/config.h)
 
 include_directories(include)
-include_directories(${Boost_INCLUDE_DIRS})
+
 
 #add_definitions(-DTMDB_USE_OPENSSL=1)
 

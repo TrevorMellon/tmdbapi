@@ -9,8 +9,6 @@ if (Boost_FOUND)
     add_definitions( "-DHAS_BOOST" )
 endif (Boost_FOUND)
 
-
-
 if(WIN32)
 	find_package(ICU OPTIONAL_COMPONENTS dt uc i18n)
 else(WIN32)
@@ -31,5 +29,11 @@ include_directories("${RAPIDJSON_INCLUDE_DIRS}")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${RAPIDJSON_CXX_FLAGS}")
 
 find_package(OpenSSL)
+if(OPENSSL_FOUND)
+	include_directories("${OPENSSL_INCLUDE_DIR}")
+endif(OPENSSL_FOUND)
 
 find_package(CURL)
+if(CURL_FOUND)
+	include_directories("${CURL_INCLUDE_DIRS}")
+endif(CURL_FOUND)
