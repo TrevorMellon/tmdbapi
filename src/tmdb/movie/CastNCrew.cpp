@@ -18,15 +18,15 @@
 
 using namespace tmdb;
 
-std::vector<data::Cast> castparse(rapidjson::Value &r)
+std::vector<movie::types::Cast> castparse(rapidjson::Value &r)
 {
-	std::vector<data::Cast> ret;
+	std::vector<movie::types::Cast> ret;
 
 	if (r.IsArray())
 	{
 		for (auto &rr : r.GetArray())
 		{
-			data::Cast cz;
+			movie::types::Cast cz;
 			if (rjcheck(rr, "id"))
 			{
 				cz.id = rr["id"].GetInt64();
@@ -61,15 +61,15 @@ std::vector<data::Cast> castparse(rapidjson::Value &r)
 	return ret;
 }
 
-std::vector<data::Crew> crewparse(rapidjson::Value &r)
+std::vector<movie::types::Crew> crewparse(rapidjson::Value &r)
 {
-	std::vector<data::Crew> ret;
+	std::vector<movie::types::Crew> ret;
 
 	if (r.IsArray())
 	{
 		for (auto &rr : r.GetArray())
 		{
-			data::Crew cz;
+			movie::types::Crew cz;
 			cz.zero();
 			if (rjcheck(rr, "id"))
 			{
@@ -101,13 +101,13 @@ std::vector<data::Crew> crewparse(rapidjson::Value &r)
 	return ret;
 }
 
-data::CastNCrew castncrewparse(std::string j, uint64_t movieid)
+movie::types::CastNCrew castncrewparse(std::string j, uint64_t movieid)
 {
 	rapidjson::Document d;
 	d.Parse<0>(j.c_str());
 
 	rapidjson::Value &r = d;
-	data::CastNCrew ccz;
+	movie::types::CastNCrew ccz;
 	ccz.zero();
 	ccz.id = movieid;
 
@@ -116,20 +116,20 @@ data::CastNCrew castncrewparse(std::string j, uint64_t movieid)
 		if (rjcheck(r, "crew"))
 		{
 			rapidjson::Value &crewr = d["crew"];
-			std::vector<data::Crew> cwz = crewparse(crewr);
+			std::vector<movie::types::Crew> cwz = crewparse(crewr);
 			ccz.crew.assign(cwz.begin(), cwz.end());
 		}
 		if (rjcheck(r, "cast"))
 		{
 			rapidjson::Value &castr = d["cast"];
-			std::vector<data::Cast> ctz = castparse(castr);
+			std::vector<movie::types::Cast> ctz = castparse(castr);
 			ccz.cast.assign(ctz.begin(), ctz.end());
 		}
 	}
 	return ccz;
 }
 
-data::CastNCrew CastNCrew::get(uint64_t movieid)
+movie::types::CastNCrew movie::CastNCrew::get(uint64_t movieid)
 {
 	std::stringstream ss;
 
@@ -139,7 +139,7 @@ data::CastNCrew CastNCrew::get(uint64_t movieid)
 	
 	std::string j = api.json(ss.str());
 
-	data::CastNCrew ccz = castncrewparse(j, movieid);
+	movie::types::CastNCrew ccz = castncrewparse(j, movieid);
 
 	return ccz;
 }

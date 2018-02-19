@@ -20,18 +20,17 @@
 
 namespace tmdb
 {
-	class KeywordsPrivate;
-
-	class Keywords
+	namespace movie
 	{
-	public:
-		Keywords();
-		~Keywords();
-	public:
-		data::KeywordList get(uint64_t key);
-	public:
-		KeywordsPrivate *_p;
-	};
+		class Keywords
+		{
+		public:
+			Keywords(){}
+			~Keywords(){}
+		public:
+			static types::KeywordList get(uint64_t key);
+		};
+	}//namespace movie
 }//namespace tmdb;
 
 #endif //TMDB_KEYWORDS_H

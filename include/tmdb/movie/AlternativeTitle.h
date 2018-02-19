@@ -19,15 +19,16 @@
 
 namespace tmdb
 {
-
-	class AlternativesTitle
+	namespace movie
 	{
-	public:
-		AlternativesTitle(){}
-	public:
-		static data::AlternativeTitles get(const uint64_t id);
-	};
-
+		class AlternativesTitle
+		{
+		public:
+			AlternativesTitle(){}
+		public:
+			static types::AlternativeTitles get(const uint64_t id);
+		};
+	}//namespace movie
 }//namepace tmdb
 
 #endif//TMDB_ALTERNATIVE_TITLE__H

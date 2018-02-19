@@ -21,7 +21,7 @@
 using namespace tmdb;
 using namespace rapidjson;
 
-data::AlternativeTitles AlternativesTitle::get(const uint64_t id)
+movie::types::AlternativeTitles movie::AlternativesTitle::get(const uint64_t id)
 {
 	ApiGet &api = ApiGetSingleton::get_mutable_instance();
 
@@ -41,8 +41,8 @@ data::AlternativeTitles AlternativesTitle::get(const uint64_t id)
 
 	std::string j = api.json(ss.str(), opts);
 
-	data::AlternativeTitle alttitle;
-	data::AlternativeTitles alttitles;
+	movie::types::AlternativeTitle alttitle;
+	movie::types::AlternativeTitles alttitles;
 
 	Document d;
 	d.Parse<0>(j.c_str());

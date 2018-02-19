@@ -35,7 +35,7 @@ namespace tmdb
 		ApiGet(bool usessl = TMDB_DEFAULT_SSL);
 		~ApiGet();
 	public:
-		std::string json(std::string partialurl = "", const QueryOptions &opt = QueryOptions());
+		std::string json(std::string partialurl = "", const QueryOptions &opts = QueryOptions());
 		std::shared_ptr<uint8_t> getImage(std::string url, size_t &sz);
 		void saveImage(std::string url, std::string filename);		
 	public:

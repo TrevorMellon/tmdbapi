@@ -99,7 +99,7 @@ namespace tmdb
 
 	std::string url_encode(const std::wstring &value, bool fixquery = false)
 	{
-#ifdef TMDB_USE_CURL
+#if TMDB_USE_CURL
 		CURL *h = curl_easy_init();
 
 		std::string in = boost::locale::conv::utf_to_utf<char>(value);
@@ -268,7 +268,7 @@ namespace tmdb
 	}
 
 
-	std::string ApiGetPrivate::http(const HostParams &param, size_t &sz, const QueryOptions &opt)
+	std::string ApiGetPrivate::http(const HostParams &param, size_t &sz, const QueryOptions &opts)
 	{
 		boost::system::error_code ec;
 
@@ -323,13 +323,11 @@ namespace tmdb
 			getSS << _url;
 		}
 		getSS << "?api_key=" << TMDB_API_KEY;
-
-
-		auto iter = opt.begin();
-		for (iter = opt.begin(); iter != opt.end(); ++iter)
+		
+		for (auto i: opts)
 		{
-			std::string key = iter->first;
-			std::string value = iter->second;
+			std::string key = i.first;
+			std::string value = i.second;
 			std::wstring v2 = boost::locale::conv::to_utf<wchar_t>(value, "UTF-8");
 			std::stringstream optSS;
 			optSS << "&" << key;
@@ -433,7 +431,7 @@ namespace tmdb
 	}
 
 
-	std::string ApiGetPrivate::https(const HostParams &param, size_t &sz, const QueryOptions &opt)
+	std::string ApiGetPrivate::https(const HostParams &param, size_t &sz, const QueryOptions &opts)
 	{
 #if TMDB_USE_OPENSSL
 		boost::system::error_code ec;
@@ -511,12 +509,10 @@ namespace tmdb
 		}
 		getSS << "?api_key=" << TMDB_API_KEY;
 
-
-		std::vector<QueryOption>::iterator iter;
-		for (iter = _options.begin(); iter != _options.end(); ++iter)
+		for (QueryOption i: opts)
 		{
-			std::string key = iter->first;
-			std::string value = iter->second;
+			std::string key = i.first;
+			std::string value = i.second;
 
 			std::wstring v2 = boost::locale::conv::to_utf<wchar_t>(value, "UTF-8");
 
@@ -620,7 +616,7 @@ namespace tmdb
 #endif
 		return bodyss.str();		
 #else
-		return http(url);
+		return http(param, sz, opts);
 #endif//TMDB_USE_OPENSSL
 	}
 }//namespace tmdb
@@ -638,9 +634,9 @@ ApiGet::~ApiGet()
 
 }
 
-std::string ApiGet::json(std::string url, const QueryOptions &opt)
+std::string ApiGet::json(std::string url, const QueryOptions &opts)
 {
-	return _p->json(url, opt);
+	return _p->json(url, opts);
 }
 
 void ApiGet::setSSL(const bool use)
