@@ -43,7 +43,6 @@ build_script:
  - cmd: cd build
  - cmd: cmake -G "NMake Makefiles" -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=..\ttscmd -DTMDB_API_KEY=%TMDB_KEY% ..
  - cmd: nmake
- - cmd: nmake install
  - cmd: cd ..
  
 test_script:
