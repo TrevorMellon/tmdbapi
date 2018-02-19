@@ -46,7 +46,7 @@ script:
  - make
  - make install
  - cd ../..
- - export CPATH=${SDK_DIR}/gtest/include:${SDK_DIR}/rapidjson/include:$CPATH
+ - export CPATH=$SDK_DIR/gtest/include:$SDK_DIR/rapidjson/include:$CPATH
  - echo $CPATH
  - export C_INCLUDE_PATH=$CPATH
  - export CPLUS_INCLUDE_PATH=$CPATH
