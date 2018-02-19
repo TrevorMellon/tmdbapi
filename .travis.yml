@@ -56,7 +56,7 @@ script:
  - mkdir -p build
  - cd build
  - cmake
- - cmake -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Release -DTMDB_API_KEY=${TMDB_KEY} ..
+ - cmake -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Release -DTMDB_API_KEY=${TMDB_KEY} -DCMAKE_INCLUDE_PATH=$CPATH -DCMAKE_LIBRARY_PATH=$LD_LIBRARY_PATH ..
  - ctest -V 
 
 
