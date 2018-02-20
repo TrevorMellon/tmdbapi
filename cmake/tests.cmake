@@ -17,6 +17,14 @@ target_link_libraries(tmdbtest
 target_include_directories(tmdbtest PUBLIC ${GTEST_INCLUDE_DIRS})
 target_include_directories(tmdbtest PUBLIC ../include)
 target_include_directories(tmdbtest PUBLIC ${Boost_INCLUDE_DIRS})
+
+set(CMAKE_THREAD_PREFER_PTHREAD TRUE)
+set(THREADS_PREFER_PTHREAD_FLAG TRUE)
+find_package(Threads)
+
+if(NOT MSVC)
+	target_link_libraries(tmdbtest Threads::Threads)
+endif(NOT MSVC)
 	
 if(USING_OPENSSL)
 	target_link_libraries(tmdbtest 
