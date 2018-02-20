@@ -51,23 +51,23 @@ before_install:
   - if [ ! -d boost_1_65_1 ]; then tar -xzf boost_1_65_1.tar.gz; fi
   - cd cmake-3.10.2
   - ./configure --prefix=/usr
-  - make > /dev/null
+  - make
   - sudo make install > /dev/null
   - cd ..
   - cd boost_1_65_1
   - ./bootstrap.sh
   - ./b2 stage
-  - sudo ./b2 install --prefix=/usr
+  - sudo ./b2 install --prefix=/usr > /dev/null
   - cd ..
   - cd googletest
   - cmake -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr .
   - make
-  - sudo make install
+  - sudo make install > /dev/null
   - cd ..
   - cd rapidjson
   - cmake -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr .
   - make
-  - sudo make install
+  - sudo make install > /dev/null
 
 script:
  - cd $TRAVIS_BUILD_DIR 
