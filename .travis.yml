@@ -30,35 +30,39 @@ env:
 branches:
  only:
   - master
+  
+cache:
+ directories:
+  ${HOME}/depend
 
 before_install:
   - eval "${MATRIX_EVAL}"
 #  - sudo apt-get -qq update
 #  - sudo apt-get install -y libboost-all-dev
+  - cd ${HOME}
+  - mkdir -p depend
+  - cd depend
+  - if [ ! -d rapidjson ]; git clone $RAPID_JSON_URL; fi
+  - if [ ! -d googletest ]; git clone $GTEST_URL; fi
+  - if [ ! -f boost_1_66_0.tar.bz2 ]; wget $BOOST_URL; fi
+  - if [ ! -d boost_1_66_0 ]; tar -xjf boost*.tar.bz2; fi
+  - cd boost_1_66_0
+  - ./bootstrap.sh
+  - ./b2 stage
+  - sudo ./b2 install --prefix=/usr
+  - cd ..
+  - cd googletest
+  - cmake -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr .
+  - make
+  - sudo make install
+  - cd ..
+  - cd rapidjson
+  - cmake -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr .
+  - make
+  - sudo make install
 
 script:
- - cd $TRAVIS_BUILD_DIR
- - mkdir -p sdk
- - cd sdk
- - git clone $RAPID_JSON_URL
- - git clone $GTEST_URL
- - wget $BOOST_URL
- - tar -xjf boost*.tar.bz2
- - cd boost_1_66_0
- - ./bootstrap.sh
- - ./b2 stage
- - sudo ./b2 install --prefix=/usr
- - cd ..
- - cd googletest
- - cmake -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr .
- - make
- - sudo make install
- - cd ..
- - cd rapidjson
- - cmake -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr .
- - make
- - sudo make install
- - cd ../..
+ - cd $TRAVIS_BUILD_DIR 
  - mkdir -p build
  - cd build
  - cmake -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Release -DTMDB_API_KEY=${TMDB_KEY} -DTMDB_TEST=ON ..
