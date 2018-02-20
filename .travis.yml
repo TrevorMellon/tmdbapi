@@ -42,10 +42,10 @@ before_install:
   - cd ${HOME}
   - mkdir -p depend
   - cd depend
-  - if [ ! -d rapidjson ]; git clone $RAPID_JSON_URL; fi
-  - if [ ! -d googletest ]; git clone $GTEST_URL; fi
-  - if [ ! -f boost_1_66_0.tar.bz2 ]; wget $BOOST_URL; fi
-  - if [ ! -d boost_1_66_0 ]; tar -xjf boost*.tar.bz2; fi
+  - if [ ! -d rapidjson ]; then git clone $RAPID_JSON_URL; fi
+  - if [ ! -d googletest ]; then git clone $GTEST_URL; fi
+  - if [ ! -f boost_1_66_0.tar.bz2 ]; then wget $BOOST_URL; fi
+  - if [ ! -d boost_1_66_0 ]; then tar -xjf boost*.tar.bz2; fi
   - cd boost_1_66_0
   - ./bootstrap.sh
   - ./b2 stage
