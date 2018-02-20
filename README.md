@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.org/TrevorMellon/tmdbapi.svg?branch=master)](https://travis-ci.org/TrevorMellon/tmdbapi)
 # tmdbapi
 
 This is a C++ interface to the [themoviedb.org](https://www.themoviedb.org)
