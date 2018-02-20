@@ -56,18 +56,18 @@ before_install:
   - cd ..
   - cd boost_1_65_1
   - ./bootstrap.sh
-  - ./b2 stage > /dev/null
-  - sudo ./b2 install --prefix=/usr > /dev/null
+  - ./b2 stage
+  - sudo ./b2 install --prefix=/usr
   - cd ..
   - cd googletest
   - cmake -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr .
-  - make > /dev/null
-  - sudo make install > /dev/null
+  - make
+  - sudo make install
   - cd ..
   - cd rapidjson
   - cmake -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr .
-  - make > /dev/null
-  - sudo make install > /dev/null
+  - make
+  - sudo make install
 
 script:
  - cd $TRAVIS_BUILD_DIR 
