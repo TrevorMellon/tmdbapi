@@ -22,12 +22,12 @@ namespace tmdb
 {
 	namespace movie
 	{
-		class CastNCrew
+		class CastAndCrew
 		{
 		public:
-			CastNCrew(){}
+			CastAndCrew(){}
 		public:
-			static movie::types::CastNCrew get(uint64_t movieid);
+			static tmdb::types::CastAndCrew get(uint64_t movieid);
 		};
 	}
 }
