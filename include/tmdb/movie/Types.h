@@ -16,6 +16,12 @@
 #include <stdint.h>
 #include <vector>
 
+#include <tmdb/common/Languages.h>
+#include <tmdb/common/ProductionCompany.h>
+#include <tmdb/common/ProductionCountry.h>
+#include <tmdb/common/CastAndCrew.h>
+#include <tmdb/common/Genre.h>
+
 namespace tmdb
 {
 	namespace movie
@@ -59,115 +65,10 @@ namespace tmdb
 				}
 			};
 
-			struct Genre
-			{
-				uint64_t		id;
-				std::string		name;
+			
 
-				Genre()
-				{
-					zero();
-				}
+			
 
-				void zero()
-				{
-					id = 0;
-					name = "";
-				}
-
-				bool valid()
-				{
-					if (id == 0 || name.empty())
-					{
-						return false;
-					}
-					return true;
-				}
-			};
-
-			struct ProductionCompany
-			{
-				uint64_t id;
-				std::string name;
-
-				ProductionCompany()
-				{
-					zero();
-				}
-
-				void zero()
-				{
-					id = 0;
-					name = "";
-				}
-
-				bool valid()
-				{
-					if (id == 0 || name.empty())
-					{
-						return false;
-					}
-					return true;
-				}
-			};
-
-			struct ProductionCountry
-			{
-				std::string iso;//iso 3166 1
-				std::string name;
-
-				ProductionCountry()
-				{
-					zero();
-				}
-
-				void zero()
-				{
-					iso = "";
-					name = "";
-				}
-
-				bool valid()
-				{
-					if (iso.empty() || name.empty())
-					{
-						return false;
-					}
-					return true;
-				}
-			};
-
-			//***************************************
-			//
-			//		Languages Type
-			//
-			//***************************************
-
-			struct Languages
-			{
-				std::string iso;//iso 639 1
-				std::string name;
-
-				Languages()
-				{
-					zero();
-				}
-
-				void zero()
-				{
-					iso = "";
-					name = "";
-				}
-
-				bool valid()
-				{
-					if (iso.empty() || name.empty())
-					{
-						return false;
-					}
-					return true;
-				}
-			};
 
 			//***************************************
 			//
@@ -190,7 +91,7 @@ namespace tmdb
 
 				uint64_t		budget;
 
-				std::vector<Genre> genres;
+				std::vector<tmdb::types::Genre> genres;
 
 				std::string homepage;
 
@@ -203,8 +104,8 @@ namespace tmdb
 
 				std::string poster_path;
 
-				std::vector<ProductionCompany> production_companies;
-				std::vector<ProductionCountry> production_countries;
+				std::vector<tmdb::types::ProductionCompany> production_companies;
+				std::vector<tmdb::types::ProductionCountry> production_countries;
 
 				std::string	release_date;//2012-11-31
 				time_t		release_date_t;
@@ -212,7 +113,7 @@ namespace tmdb
 				uint64_t revenue;
 				uint32_t runtime;
 
-				std::vector<Languages> spoken_languages;
+				std::vector<tmdb::types::Languages> spoken_languages;
 
 				std::string status;// "Released"
 
@@ -332,109 +233,6 @@ namespace tmdb
 				}
 			};
 
-			//***************************************
-			//
-			//		Cast And Crew Types
-			//
-			//***************************************
-
-			struct Crew
-			{
-				uint64_t id;
-				std::string name;
-				std::string department;
-				std::string job;
-				std::string credit_id;
-				std::string profile_path;
-
-				Crew()
-				{
-					zero();
-				}
-
-				void zero()
-				{
-					credit_id = "";
-					department = "";
-					id = 0;
-					job = "";
-					name = "";
-					profile_path = "";
-				}
-
-				bool valid()
-				{
-					if (id == 0 || name.empty())
-					{
-						return false;
-					}
-					return true;
-				}
-			};
-
-			struct Cast
-			{
-				uint64_t	id;
-				std::string	name;
-				std::string	character;
-				uint64_t	cast_id;
-				std::string	credit_id;
-				uint32_t	order;
-				std::string	profile_path;
-
-				Cast()
-				{
-					zero();
-				}
-
-				void zero()
-				{
-					cast_id = 0;
-					character = "";
-					credit_id = "";
-					id = 0;
-					name = "";
-					order = 0;
-					profile_path = "";
-				}
-
-				bool valid()
-				{
-					if (id == 0 || name.empty())
-					{
-						return false;
-					}
-					return true;
-				}
-			};
-
-			struct CastNCrew
-			{
-				uint64_t	id;
-				std::vector<Cast> cast;
-				std::vector<Crew> crew;
-
-				CastNCrew()
-				{
-					zero();
-				}
-
-				void zero()
-				{
-					id = 0;
-					cast.clear();
-					crew.clear();
-				}
-
-				bool valid()
-				{
-					if (id == 0 || cast.empty())
-					{
-						return false;
-					}
-					return true;
-				}
-			};
 
 			//***************************************
 			//
@@ -524,7 +322,7 @@ namespace tmdb
 			struct Combined
 			{
 				Movie				movie;
-				CastNCrew			crew;
+				tmdb::types::CastAndCrew crew;
 				AlternativeTitles	alt_titles;
 				VideosList			videos;
 				KeywordList			keywords;
