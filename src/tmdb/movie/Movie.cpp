@@ -22,7 +22,7 @@
 #include <algorithm>
 
 #include <tmdb/ApiGet.h>
-#include <tmdb/movie/CastNCrew.h>
+#include <tmdb/movie/CastAndCrew.h>
 #include <tmdb/movie/Videos.h>
 #include <tmdb/movie/Keywords.h>
 #include <tmdb/movie/AlternativeTitle.h>
@@ -201,11 +201,11 @@ namespace tmdb
 			}
 			if (type == Movie::CastScan || type == Movie::AllScan)
 			{
-				movie::types::CastNCrew ccz;
+				tmdb::types::CastAndCrew ccz;
 				ccz.zero();
 				ccz.id = data->id();
 
-				movie::CastNCrew cc;
+				movie::CastAndCrew cc;
 				if (data->id() != 0)
 				{
 					ccz = cc.get(data->id());
@@ -338,7 +338,7 @@ namespace tmdb
 				rapidjson::Value &rr = r["genres"];
 				for (rapidjson::SizeType i = 0; i < rr.Size(); ++i)
 				{
-					movie::types::Genre g;
+					tmdb::types::Genre g;
 					rapidjson::Value &rrr = rr[i];
 
 					if (rjcheck(rrr, "id"))
@@ -385,7 +385,7 @@ namespace tmdb
 				rapidjson::Value &rr = r["production_companies"];
 				for (rapidjson::SizeType i = 0; i < rr.Size(); ++i)
 				{
-					movie::types::ProductionCompany t;
+					tmdb::types::ProductionCompany t;
 					rapidjson::Value &rrr = rr[i];
 
 					if (rjcheck(rrr, "name"))
@@ -407,7 +407,7 @@ namespace tmdb
 				for (rapidjson::SizeType i = 0; i < rr.Size(); ++i)
 				{
 					rapidjson::Value &rrr = rr[i];
-					movie::types::ProductionCountry p;
+					tmdb::types::ProductionCountry p;
 					if (rjcheck(rrr, "iso_3166_1"))
 					{
 						p.iso = rrr["iso_3166_1"].GetString();
@@ -442,7 +442,7 @@ namespace tmdb
 				for (rapidjson::SizeType i = 0; i < rr.Size(); ++i)
 				{
 					rapidjson::Value &rrr = rr[i];
-					movie::types::Languages lang;
+					tmdb::types::Languages lang;
 					if (rjcheck(rrr, "iso_639_1"))
 					{
 						lang.iso = rrr["iso_639_1"].GetString();
