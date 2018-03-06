@@ -14,12 +14,21 @@ SET (INC_T
 	${PROJECT_SOURCE_DIR}/include/tmdb/IsoTypes.h
 	${PROJECT_SOURCE_DIR}/include/tmdb/ImageDownloader.h
 	
-	${PROJECT_SOURCE_DIR}/include/tmdb/config.h	
+	${PROJECT_SOURCE_DIR}/include/tmdb/config.h
+)
+
+SET (COMMON_INC_T
+	${PROJECT_SOURCE_DIR}/include/tmdb/common/ProductionCompany.h
+	${PROJECT_SOURCE_DIR}/include/tmdb/common/ProductionCountry.h
+	${PROJECT_SOURCE_DIR}/include/tmdb/common/Languages.h
+	${PROJECT_SOURCE_DIR}/include/tmdb/common/CastAndCrew.h
+	${PROJECT_SOURCE_DIR}/include/tmdb/common/People.h
+	${PROJECT_SOURCE_DIR}/include/tmdb/common/Genre.h
 )
 
 SET (SRC_MOVIE_T
 	${PROJECT_SOURCE_DIR}/src/tmdb/movie/AlternativeTitle.cpp	
-	${PROJECT_SOURCE_DIR}/src/tmdb/movie/CastNCrew.cpp
+	${PROJECT_SOURCE_DIR}/src/tmdb/movie/CastAndCrew.cpp
 	${PROJECT_SOURCE_DIR}/src/tmdb/movie/Keywords.cpp
 	${PROJECT_SOURCE_DIR}/src/tmdb/movie/Movie.cpp
 	${PROJECT_SOURCE_DIR}/src/tmdb/movie/Videos.cpp	
@@ -27,16 +36,28 @@ SET (SRC_MOVIE_T
 
 SET(INC_MOVIE_T
 	${PROJECT_SOURCE_DIR}/include/tmdb/movie/AlternativeTitle.h	
-	${PROJECT_SOURCE_DIR}/include/tmdb/movie/CastNCrew.h
+	${PROJECT_SOURCE_DIR}/include/tmdb/movie/CastAndCrew.h
 	${PROJECT_SOURCE_DIR}/include/tmdb/movie/Keywords.h
 	${PROJECT_SOURCE_DIR}/include/tmdb/movie/Movie.h
 	${PROJECT_SOURCE_DIR}/include/tmdb/movie/Types.h
 	${PROJECT_SOURCE_DIR}/include/tmdb/movie/Videos.h
 )
 
-SET (SOURCES ${SRC_T} ${INC_T} ${SRC_MOVIE_T} ${INC_MOVIE_T})
+SET(SRC_TV_T
+	${PROJECT_SOURCE_DIR}/src/tmdb/tv/TV.cpp
+)
+
+SET (INC_TV_T
+	${PROJECT_SOURCE_DIR}/include/tmdb/tv/TV.h
+	${PROJECT_SOURCE_DIR}/include/tmdb/tv/Types.h
+)
+
+SET (SOURCES ${SRC_T} ${INC_T} ${SRC_MOVIE_T} ${INC_MOVIE_T} ${SRC_TV_T} ${INC_TV_T} ${COMMON_INC_T})
 
 SOURCE_GROUP("include" FILES ${INC_T})
 SOURCE_GROUP("source" FILES ${SRC_T})
 SOURCE_GROUP("include\\movie" FILES ${INC_MOVIE_T})
 SOURCE_GROUP("source\\movie" FILES ${SRC_MOVIE_T})
+SOURCE_GROUP("include\\tv" FILES ${INC_TV_T})
+SOURCE_GROUP("source\\tv" FILES ${SRC_TV_T})
+SOURCE_GROUP("include\\common" FILES ${COMMON_INC_T})
