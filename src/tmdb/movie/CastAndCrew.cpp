@@ -8,7 +8,7 @@
 *                                                    *
 ******************************************************/
 
-#include "tmdb/movie/CastNCrew.h"
+#include "tmdb/movie/CastAndCrew.h"
 #include "tmdb/ApiGet.h"
 #include "tmdb/Util.h"
 
@@ -18,15 +18,15 @@
 
 using namespace tmdb;
 
-std::vector<movie::types::Cast> castparse(rapidjson::Value &r)
+std::vector<tmdb::types::Cast> castparse(rapidjson::Value &r)
 {
-	std::vector<movie::types::Cast> ret;
+	std::vector<tmdb::types::Cast> ret;
 
 	if (r.IsArray())
 	{
 		for (auto &rr : r.GetArray())
 		{
-			movie::types::Cast cz;
+			tmdb::types::Cast cz;
 			if (rjcheck(rr, "id"))
 			{
 				cz.id = rr["id"].GetInt64();
@@ -61,15 +61,15 @@ std::vector<movie::types::Cast> castparse(rapidjson::Value &r)
 	return ret;
 }
 
-std::vector<movie::types::Crew> crewparse(rapidjson::Value &r)
+std::vector<tmdb::types::Crew> crewparse(rapidjson::Value &r)
 {
-	std::vector<movie::types::Crew> ret;
+	std::vector<tmdb::types::Crew> ret;
 
 	if (r.IsArray())
 	{
 		for (auto &rr : r.GetArray())
 		{
-			movie::types::Crew cz;
+			tmdb::types::Crew cz;
 			cz.zero();
 			if (rjcheck(rr, "id"))
 			{
@@ -101,13 +101,13 @@ std::vector<movie::types::Crew> crewparse(rapidjson::Value &r)
 	return ret;
 }
 
-movie::types::CastNCrew castncrewparse(std::string j, uint64_t movieid)
+tmdb::types::CastAndCrew castncrewparse(std::string j, uint64_t movieid)
 {
 	rapidjson::Document d;
 	d.Parse<0>(j.c_str());
 
 	rapidjson::Value &r = d;
-	movie::types::CastNCrew ccz;
+	tmdb::types::CastAndCrew ccz;
 	ccz.zero();
 	ccz.id = movieid;
 
@@ -116,20 +116,20 @@ movie::types::CastNCrew castncrewparse(std::string j, uint64_t movieid)
 		if (rjcheck(r, "crew"))
 		{
 			rapidjson::Value &crewr = d["crew"];
-			std::vector<movie::types::Crew> cwz = crewparse(crewr);
+			std::vector<tmdb::types::Crew> cwz = crewparse(crewr);
 			ccz.crew.assign(cwz.begin(), cwz.end());
 		}
 		if (rjcheck(r, "cast"))
 		{
 			rapidjson::Value &castr = d["cast"];
-			std::vector<movie::types::Cast> ctz = castparse(castr);
+			std::vector<tmdb::types::Cast> ctz = castparse(castr);
 			ccz.cast.assign(ctz.begin(), ctz.end());
 		}
 	}
 	return ccz;
 }
 
-movie::types::CastNCrew movie::CastNCrew::get(uint64_t movieid)
+tmdb::types::CastAndCrew movie::CastAndCrew::get(uint64_t movieid)
 {
 	std::stringstream ss;
 
@@ -139,7 +139,7 @@ movie::types::CastNCrew movie::CastNCrew::get(uint64_t movieid)
 	
 	std::string j = api.json(ss.str());
 
-	movie::types::CastNCrew ccz = castncrewparse(j, movieid);
+	tmdb::types::CastAndCrew ccz = castncrewparse(j, movieid);
 
 	return ccz;
 }
