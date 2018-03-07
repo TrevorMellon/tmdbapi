@@ -22,6 +22,19 @@ namespace tmdb
 			std::string name;
 			Gender gender;
 			std::string profile_path;
+
+			BasicPerson()
+			{
+				zero();
+			}
+
+			void zero()
+			{
+				id = 0;
+				name = "";
+				gender = Gender::Unset;
+				profile_path = "";
+			}
 		};
 	}
 }
