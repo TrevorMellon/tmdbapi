@@ -37,11 +37,11 @@ namespace tmdb
 				std::string		original_language;
 				std::string		original_name;
 				std::string		overview;
-				float			popularity;
+				double			popularity;
 				std::string		poster_path;
 				std::string		status;
 				std::string		type;
-				uint32_t		vote_average;
+				double			vote_average;
 				uint64_t		vote_count;
 
 				TV()
@@ -106,6 +106,17 @@ namespace tmdb
 						return true;
 					}
 					return false;
+				}
+
+				void setId(uint64_t i)
+				{
+					id = i;
+					tv.id = i;
+				}
+
+				uint64_t Id()
+				{
+					return id;
 				}
 			};
 		}
