@@ -4,6 +4,8 @@
 
 #include <tmdb/movie/Movie.h>
 #include <tmdb/movie/Types.h>
+#include <tmdb/tv/TV.h>
+#include <tmdb/tv/Types.h>
 #include <tmdb/Configuration.h>
 #include <tmdb/ApiGet.h>
 
@@ -174,4 +176,23 @@ TEST(ImageDownloader, ImageDownloader)
 	}	
 
 	delete m;
+}
+
+TEST(TVApi, Search)
+{
+	tmdb::TV tv;
+	auto r = tv.search(L"moomins");
+	size_t sz = r.size();
+	ASSERT_GT(sz, 0);
+}
+
+TEST(TVApi, TV)
+{
+	std::shared_ptr<tmdb::tv::types::Combined> c(new tmdb::tv::types::Combined);
+	c->setId(13792l);
+	tmdb::TV tv;
+	tv.scan(c);
+
+	ASSERT_EQ(c->tv.name, "The Moomins");
+
 }
