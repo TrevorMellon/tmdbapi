@@ -75,7 +75,7 @@ namespace tmdb
 			{
 				std::stringstream ySS;
 				ySS << year;
-				QueryOption yopt("year", ySS.str());
+				QueryOption yopt("first_air_date_year", ySS.str());
 				opts.push_back(yopt);
 			}
 
@@ -194,13 +194,13 @@ namespace tmdb
 
 			if (type == TV::TVScan || type == TV::AllScan)
 			{
-				/*movie::types::Movie m;
-				m.zero();
-				if (data->id() != 0)
+				tv::types::TV tv;
+				tv.zero();
+				if (data->Id() != 0)
 				{
-					m = scanMainMovieParse(data->id());
+					tv = scanMainTVParse(data->Id());
 				}
-				data->movie = m;*/
+				data->tv = tv;
 			}
 			if (type == TV::CastScan || type == TV::AllScan)
 			{
@@ -235,15 +235,15 @@ namespace tmdb
 			return data;
 		}
 
-		tv::types::TV scanMainMovieParse(uint64_t id)
+		tv::types::TV scanMainTVParse(uint64_t id)
 		{
 			std::stringstream urlss;
-			urlss << "/3/movie/" << id;
+			urlss << "/3/tv/" << id;
 			
 			std::string j = _tmdbapi->json(urlss.str());
 
-			tv::types::TV m;
-			m.zero();
+			tv::types::TV tv;
+			tv.zero();
 
 			bool retry = false;
 
@@ -257,12 +257,12 @@ namespace tmdb
 
 				rapidjson::Value &r = d;
 
-				m = fromTVJson(r);
+				tv = fromTVJson(r);
 			}
 			catch (...)
 			{
 				retry = true;
-				m.zero();
+				tv.zero();
 			}
 
 			if (retry)
@@ -278,15 +278,15 @@ namespace tmdb
 
 					rapidjson::Value &r = d;
 
-					m = fromTVJson(r);
+					tv = fromTVJson(r);
 				}
 				catch (...)
 				{
-					m.zero();
+					tv.zero();
 					std::cout << "Retry Failed" << std::endl;
 				}
 			}
-			return m;
+			return tv;
 		}
 
 
@@ -294,48 +294,53 @@ namespace tmdb
 		{
 			tv::types::TV data;
 			data.zero();
-			/*if (rjcheck(r, "id"))
+			if (rjcheck(r, "id"))
 			{
 				data.id = r["id"].GetInt();
 
 			}
-			if (rjcheck(r, "adult"))
-			{
-				bool t = r["adult"].GetBool();
-				data.adult = t;
-			}
+			
 			if (rjcheck(r, "backdrop_path"))
 			{
 				data.backdrop_path = r["backdrop_path"].GetString();
 			}
-			if (rjcheck(r, "belongs_to_collection"))
+			if (rjcheck(r, "created_by"))
 			{
-				rapidjson::Value &rr = r["belongs_to_collection"];
-				movie::types::Collection col;
-				col.id = 0;
-				if (rjcheck(rr, "id"))
+				rapidjson::Value &rr = r["created_by"];
+				for (int i = 0; i < rr.Size(); ++i)
 				{
-					col.id = rr["id"].GetInt();
-
+					rapidjson::Value &rrr = rr[i];
+					tmdb::types::BasicPerson person;
+					
+					if (rjcheck(rrr, "id"))
+					{
+						person.id = rrr["id"].GetUint64();
+					}
+					if (rjcheck(rrr, "name"))
+					{
+						person.name = rrr["name"].GetString();
+					}
+					if (rjcheck(rrr, "gender"))
+					{
+						person.gender = (tmdb::types::Gender)rrr["gender"].GetInt();
+					}
+					if (rjcheck(rrr, "profile_path"))
+					{
+						person.profile_path = rrr["profile_path"].GetString();
+					}
+					data.created_by.push_back(person);
 				}
-				if (rjcheck(rr, "name"))
-				{
-					col.name = rr["name"].GetString();
-				}
-				if (rjcheck(rr, "poster_path"))
-				{
-					col.poster_path = rr["poster_path"].GetString();
-				}
-				if (rjcheck(rr, "backdrop_path"))
-				{
-					col.backdrop_path = rr["backdrop_path"].GetString();
-				}
-				data.belongs_to_collection = col;
 			}
-			if (rjcheck(r, "budget"))
+			if (rjcheck(r, "episode_runtime"))
 			{
-				data.budget = r["budget"].GetInt64();
+				rapidjson::Value &rr = r["episode_runtime"];
+				if (rr.IsArray())
+				{
+					rapidjson::Value::ConstValueIterator itr = rr.Begin();
+					data.episode_runtime = itr->GetInt();
+				}
 			}
+			
 			if (rjcheck(r, "genres"))
 			{
 				rapidjson::Value &rr = r["genres"];
@@ -359,17 +364,61 @@ namespace tmdb
 			{
 				data.homepage = r["homepage"].GetString();
 			}
-			if (rjcheck(r, "imdb_id"))
+			if (rjcheck(r, "in_production"))
 			{
-				data.imdb_id = r["imdb_id"].GetString();
+				data.in_production = r["in_production"].GetBool();
+			}
+			if (rjcheck(r, "languages"))
+			{
+				rapidjson::Value &rr = r["languages"];
+				if (rr.IsArray())
+				{
+					for (auto &i : rr.GetArray())
+					{
+						std::string s = i.GetString();
+						data.languages.push_back(s);
+					}
+				}
+			}
+			if (rjcheck(r, "last_air_date"))
+			{
+				data.last_air_date = r["last_air_date"].GetString();
+				boost::gregorian::date d(boost::gregorian::from_string(data.last_air_date));
+				boost::posix_time::ptime pt(d);
+				data.last_air_date_t = boost::posix_time::to_time_t(pt);
+			}
+			if (rjcheck(r, "name"))
+			{
+				data.name = r["name"].GetString();
+			}
+			//! /todo networks
+			if (rjcheck(r, "number_of_episodes"))
+			{
+				data.number_of_episodes = r["number_of_episodes"].GetUint64();
+			}
+			if (rjcheck(r, "number_of_seasons"))
+			{
+				data.number_of_seasons = r["number_of_seasons"].GetUint64();
+			}
+			if (rjcheck(r, "origin_country"))
+			{
+				if (r["origin_country"].IsArray())
+				{
+					rapidjson::Value &rr = r["origin_country"];
+					for (auto &i : rr.GetArray())
+					{
+						std::string s = i.GetString();
+						data.origin_country.push_back(s);
+					}
+				}
 			}
 			if (rjcheck(r, "original_language"))
 			{
 				data.original_language = r["original_language"].GetString();
 			}
-			if (rjcheck(r, "original_title"))
+			if (rjcheck(r, "original_name"))
 			{
-				data.original_title = r["original_title"].GetString();
+				data.original_name = r["original_name"].GetString();
 			}
 			if (rjcheck(r, "overview"))
 			{
@@ -404,80 +453,14 @@ namespace tmdb
 
 				}
 			}
-			if (rjcheck(r, "production_countries"))
-			{
-				rapidjson::Value &rr = r["production_countries"];
-				for (rapidjson::SizeType i = 0; i < rr.Size(); ++i)
-				{
-					rapidjson::Value &rrr = rr[i];
-					tmdb::types::ProductionCountry p;
-					if (rjcheck(rrr, "iso_3166_1"))
-					{
-						p.iso = rrr["iso_3166_1"].GetString();
-					}
-					if (rjcheck(rrr, "name"))
-					{
-						p.name = rrr["name"].GetString();
-					}
-
-					data.production_countries.push_back(p);
-				}
-
-			}
-			if (rjcheck(r, "release_date"))
-			{
-				data.release_date = r["release_date"].GetString();
-				boost::gregorian::date d(boost::gregorian::from_string(data.release_date));
-				boost::posix_time::ptime pt(d);
-				data.release_date_t = boost::posix_time::to_time_t(pt);
-			}
-			if (rjcheck(r, "revenue"))
-			{
-				data.revenue = r["revenue"].GetInt64();
-			}
-			if (rjcheck(r, "runtime"))
-			{
-				data.runtime = r["runtime"].GetInt();
-			}
-			if (rjcheck(r, "spoken_languages"))
-			{
-				rapidjson::Value &rr = r["spoken_languages"];
-				for (rapidjson::SizeType i = 0; i < rr.Size(); ++i)
-				{
-					rapidjson::Value &rrr = rr[i];
-					tmdb::types::Languages lang;
-					if (rjcheck(rrr, "iso_639_1"))
-					{
-						lang.iso = rrr["iso_639_1"].GetString();
-					}
-					if (rjcheck(rrr, "name"))
-					{
-						lang.name = rrr["name"].GetString();
-					}
-					data.spoken_languages.push_back(lang);
-				}
-			}
-
-			if (rjcheck(r, "original_title"))
-			{
-				data.original_title = r["original_title"].GetString();
-
-			}
+			//! /todo seasons
 			if (rjcheck(r, "status"))
 			{
 				data.status = r["status"].GetString();
 			}
-			if (rjcheck(r, "tagline"))
+			if (rjcheck(r, "type"))
 			{
-				data.tagline = r["tagline"].GetString();
-			}
-			if (rjcheck(r, "title"))
-			{
-				data.title = r["title"].GetString();
-			}
-			if (rjcheck(r, "video"))
-			{
-				data.video = r["video"].GetBool();
+				data.type = r["type"].GetString();
 			}
 			if (rjcheck(r, "vote_average"))
 			{
@@ -486,7 +469,9 @@ namespace tmdb
 			if (rjcheck(r, "vote_count"))
 			{
 				data.vote_count = r["vote_count"].GetInt();
-			}*/
+			}
+			
+			
 			return data;
 		}
 	};

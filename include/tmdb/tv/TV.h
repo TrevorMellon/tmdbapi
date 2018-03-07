@@ -8,8 +8,8 @@
 *                                                    *
 ******************************************************/
 
-#ifndef TMDB_MOVIE_H_
-#define TMDB_MOVIE_H_
+#ifndef TMDB_TV_H
+#define TMDB_TV_H
 
 #include <string>
 #include <stdint.h>
@@ -49,4 +49,4 @@ namespace tmdb
 
 }//namespace tmdb
 
-#endif //GENESIS_TMDB_MOVIE__H
+#endif //TMDB_TV_H
