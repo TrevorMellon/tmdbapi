@@ -117,13 +117,14 @@ namespace tmdb
 		escaped.fill('0');
 		escaped << std::hex;
 
+		boost::locale::generator gen;
+		std::locale loc = gen("UTF-8");
+
 		std::string val = boost::locale::conv::utf_to_utf<char>(value);
 
 		for (std::string::const_iterator i = val.begin(), n = val.end(); i != n; ++i)
 		{
-			char c = (*i);
-			boost::locale::generator gen;
-			std::locale loc = gen("UTF-8");
+			char c = (*i);	
 
 			bool isanum = false;
 
