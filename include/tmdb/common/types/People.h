@@ -10,10 +10,9 @@ namespace tmdb
 	{
 		enum class Gender
 		{
-			Male = 0,
+			Unset = 0,
+			Male,
 			Female,
-			Unset,
-
 		};
 		
 		struct BasicPerson
@@ -34,6 +33,15 @@ namespace tmdb
 				name = "";
 				gender = Gender::Unset;
 				profile_path = "";
+			}
+
+			bool valid()
+			{
+				if (id == 0 || name.empty())
+				{
+					return false;
+				}
+				return true;
 			}
 		};
 	}
