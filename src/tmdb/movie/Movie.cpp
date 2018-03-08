@@ -22,11 +22,12 @@
 #include <algorithm>
 
 #include <tmdb/ApiGet.h>
-#include <tmdb/movie/CastAndCrew.h>
+#include <tmdb/common/CastAndCrew.h>
 #include <tmdb/movie/Videos.h>
 #include <tmdb/movie/Keywords.h>
 #include <tmdb/movie/AlternativeTitle.h>
 #include <tmdb/Util.h>
+#include <tmdb/common/types/Types.h>
 
 #include <sstream>
 
@@ -184,7 +185,7 @@ namespace tmdb
 			mtx.lock();
 
 			//data::MovieCombined data;
-			if (!data->verifyID())
+			if (!data->verify())
 			{
 				return data;
 			}
@@ -205,10 +206,10 @@ namespace tmdb
 				ccz.zero();
 				ccz.id = data->id();
 
-				movie::CastAndCrew cc;
+				CastAndCrew cc;
 				if (data->id() != 0)
 				{
-					ccz = cc.get(data->id());
+					ccz = cc.get(data->id(), tmdb::types::ScanType::Movie);
 				}
 				data->crew = ccz;
 			}

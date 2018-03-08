@@ -25,7 +25,7 @@
 
 #include <tmdb/tv/Types.h>
 
-//#include <tmdb/movie/CastNCrew.h>
+#include <tmdb/common/CastAndCrew.h>
 //#include <tmdb/movie/Videos.h>
 //#include <tmdb/movie/Keywords.h>
 //#include <tmdb/movie/AlternativeTitle.h>
@@ -187,7 +187,7 @@ namespace tmdb
 			mtx.lock();
 
 			//data::MovieCombined data;
-			if (!data->verifyID())
+			if (!data->verify())
 			{
 				return data;
 			}
@@ -204,16 +204,16 @@ namespace tmdb
 			}
 			if (type == TV::CastScan || type == TV::AllScan)
 			{
-				/*tmdb::types::CastAndCrew ccz;
+				tmdb::types::CastAndCrew ccz;
 				ccz.zero();
-				ccz.id = data->id();
+				ccz.id = data->Id();
 
 				tmdb::CastAndCrew cc;
-				if (data->id() != 0)
+				if (data->Id() != 0)
 				{
-					ccz = cc.get(data->id());
+					ccz = cc.get(data->Id(), tmdb::types::ScanType::TVShow);
 				}
-				data->crew = ccz;*/
+				data->crew = ccz;
 			}
 			if (type == TV::VideosScan || type == TV::AllScan)
 			{
