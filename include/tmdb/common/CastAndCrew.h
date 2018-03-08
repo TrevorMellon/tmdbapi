@@ -17,7 +17,7 @@
 #include <vector>
 
 #include <tmdb/common/types/Types.h>
-#include <tmdb/common//types/CastAndCrew.h>
+#include <tmdb/common/types/CastAndCrew.h>
 
 
 namespace tmdb
