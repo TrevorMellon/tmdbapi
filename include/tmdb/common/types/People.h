@@ -27,7 +27,7 @@ namespace tmdb
 				zero();
 			}
 
-			void zero()
+			virtual void zero()
 			{
 				id = 0;
 				name = "";
@@ -35,7 +35,7 @@ namespace tmdb
 				profile_path = "";
 			}
 
-			bool valid()
+			virtual bool valid()
 			{
 				if (id == 0 || name.empty())
 				{
