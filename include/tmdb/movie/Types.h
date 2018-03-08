@@ -16,11 +16,11 @@
 #include <stdint.h>
 #include <vector>
 
-#include <tmdb/common/Languages.h>
-#include <tmdb/common/ProductionCompany.h>
-#include <tmdb/common/ProductionCountry.h>
-#include <tmdb/common/CastAndCrew.h>
-#include <tmdb/common/Genre.h>
+#include <tmdb/common/types/Languages.h>
+#include <tmdb/common/types/ProductionCompany.h>
+#include <tmdb/common/types/ProductionCountry.h>
+#include <tmdb/common/types/CastAndCrew.h>
+#include <tmdb/common/types/Genre.h>
 
 namespace tmdb
 {
@@ -346,7 +346,7 @@ namespace tmdb
 					year = -1;
 				}
 
-				bool verifyID()
+				bool verify()
 				{
 					uint64_t id = movie.id;
 					if (id == crew.id)
@@ -358,7 +358,7 @@ namespace tmdb
 
 				uint64_t id()
 				{
-					if (verifyID())
+					if (verify())
 					{
 						return movie.id;
 					}
