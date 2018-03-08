@@ -1,114 +1,36 @@
-#ifndef TMDB_CASTANDCREW_H
-#define TMDB_CASTANDCREW_H
+/*****************************************************
+*                                                    *
+*  copyright (c) 2018 Trevor Mellon                  *
+*  For further information contact t@jno.io          *
+*                                                    *
+*  Licensed under the BSD 3-clause license           *
+*  See LICENCE file for more information             *
+*                                                    *
+******************************************************/
+
+
+#ifndef TMDB_CAST_AND_CREW_H_
+#define TMDB_CAST_AND_CREW_H_
 
 #include <stdint.h>
 #include <string>
 #include <vector>
 
+#include <tmdb/common/types/Types.h>
+#include <tmdb/common//types/CastAndCrew.h>
+
+
 namespace tmdb
 {
-	namespace types
+	class CastAndCrew
 	{
+	public:
+		CastAndCrew(){}
+	public:
+		static tmdb::types::CastAndCrew get(uint64_t id, tmdb::types::ScanType scantype);
+	};
 
-		struct Crew
-		{
-			uint64_t id;
-			std::string name;
-			std::string department;
-			std::string job;
-			std::string credit_id;
-			std::string profile_path;
-
-			Crew()
-			{
-				zero();
-			}
-
-			void zero()
-			{
-				credit_id = "";
-				department = "";
-				id = 0;
-				job = "";
-				name = "";
-				profile_path = "";
-			}
-
-			bool valid()
-			{
-				if (id == 0 || name.empty())
-				{
-					return false;
-				}
-				return true;
-			}
-		};
-
-		struct Cast
-		{
-			uint64_t	id;
-			std::string	name;
-			std::string	character;
-			uint64_t	cast_id;
-			std::string	credit_id;
-			uint32_t	order;
-			std::string	profile_path;
-
-			Cast()
-			{
-				zero();
-			}
-
-			void zero()
-			{
-				cast_id = 0;
-				character = "";
-				credit_id = "";
-				id = 0;
-				name = "";
-				order = 0;
-				profile_path = "";
-			}
-
-			bool valid()
-			{
-				if (id == 0 || name.empty())
-				{
-					return false;
-				}
-				return true;
-			}
-		};
-
-		struct CastAndCrew
-		{
-			uint64_t	id;
-			std::vector<Cast> cast;
-			std::vector<Crew> crew;
-
-			CastAndCrew()
-			{
-				zero();
-			}
-
-			void zero()
-			{
-				id = 0;
-				cast.clear();
-				crew.clear();
-			}
-
-			bool valid()
-			{
-				if (id == 0 || cast.empty())
-				{
-					return false;
-				}
-				return true;
-			}
-		};
-
-	}
 }
 
-#endif//TMDB_CASTANDCREW_H
+
+#endif //TMDB_CAST_AND_CREW__H
