@@ -4,9 +4,10 @@
 #include <string>
 #include <vector>
 
-#include <tmdb/common/People.h>
-#include <tmdb/common/Genre.h>
-#include <tmdb/common/ProductionCompany.h>
+#include <tmdb/common/types/People.h>
+#include <tmdb/common/types/Genre.h>
+#include <tmdb/common/types/ProductionCompany.h>
+#include <tmdb/common/types/CastAndCrew.h>
 
 namespace tmdb
 {
@@ -88,6 +89,7 @@ namespace tmdb
 				uint64_t id;
 				
 				tmdb::tv::types::TV		tv;
+				tmdb::types::CastAndCrew crew;
 
 				Combined()
 				{
@@ -97,11 +99,12 @@ namespace tmdb
 				void zero()
 				{
 					tv.zero();
+					crew.zero();
 				}
 
-				bool verifyID()
+				bool verify()
 				{
-					if (id == tv.id)
+					if (id == tv.id && id == crew.id)
 					{
 						return true;
 					}
@@ -112,6 +115,7 @@ namespace tmdb
 				{
 					id = i;
 					tv.id = i;
+					crew.id = i;
 				}
 
 				uint64_t Id()
