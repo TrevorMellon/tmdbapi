@@ -42,21 +42,23 @@ namespace tmdb
 				return true;
 			}
 
-			void operator= (const types::BasicPerson &other)
+			void copy(const types::BasicPerson &other)
 			{
-				zero();
 				this->id = other.id;
 				this->gender = other.gender;
 				this->name = other.name;
 				this->profile_path = other.profile_path;
 			}
 
+			void operator= (const types::BasicPerson &other)
+			{
+				zero();
+				copy(other);
+			}
+
 			void operator+= (const types::BasicPerson &other)
 			{
-				this->id = other.id;
-				this->gender = other.gender;
-				this->name = other.name;
-				this->profile_path = other.profile_path;
+				copy(other);
 			}
 		};
 
