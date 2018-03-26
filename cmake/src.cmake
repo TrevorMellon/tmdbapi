@@ -35,6 +35,7 @@ SET (COMMON_TYPES_INC_T
 	${PROJECT_SOURCE_DIR}/include/tmdb/common/types/People.h
 	${PROJECT_SOURCE_DIR}/include/tmdb/common/types/Genre.h
 	${PROJECT_SOURCE_DIR}/include/tmdb/common/types/Types.h
+	${PROJECT_SOURCE_DIR}/include/tmdb/common/types/Videos.h
 )
 
 SET (SRC_MOVIE_T

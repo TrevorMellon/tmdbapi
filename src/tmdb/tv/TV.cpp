@@ -26,7 +26,7 @@
 #include <tmdb/tv/Types.h>
 
 #include <tmdb/common/CastAndCrew.h>
-//#include <tmdb/movie/Videos.h>
+#include <tmdb/common/Videos.h>
 //#include <tmdb/movie/Keywords.h>
 //#include <tmdb/movie/AlternativeTitle.h>
 #include <tmdb/Util.h>
@@ -217,8 +217,8 @@ namespace tmdb
 			}
 			if (type == TV::VideosScan || type == TV::AllScan)
 			{
-				tv::Videos v;
-				data->videos = v.get(data->id());*/
+				tmdb::Videos v;
+				data->videos = v.get(data->Id(), tmdb::types::ScanType::TVShow);
 			}
 			if (type == TV::KeywordsScan || type == TV::AllScan)
 			{
@@ -307,7 +307,7 @@ namespace tmdb
 			if (rjcheck(r, "created_by"))
 			{
 				rapidjson::Value &rr = r["created_by"];
-				for (int i = 0; i < rr.Size(); ++i)
+				for (rapidjson::SizeType i = 0; i < rr.Size(); ++i)
 				{
 					rapidjson::Value &rrr = rr[i];
 					tmdb::types::BasicPerson person;

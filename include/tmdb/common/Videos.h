@@ -8,28 +8,28 @@
 *                                                    *
 ******************************************************/
 
-#ifndef TMDB_VIDEOS_H
-#define TMDB_VIDEOS_H
+#ifndef TMDB_COMMON_VIDEOS_H
+#define TMDB_COMMON_VIDEOS_H
 
 #include <string>
 #include <stdint.h>
 
-#include <tmdb/movie/Types.h>
+#include <tmdb/common/types/Types.h>
+#include <tmdb/common/types/Videos.h>
 
 namespace tmdb
 {
-	namespace movie
+
+	class Videos
 	{
-		class Videos
-		{
-		public:
-			Videos(){}
-			~Videos(){}
-		public:
-			static movie::types::VideosList get(uint64_t movie_id);		
-		};
-	}
+	public:
+		Videos(){}
+		~Videos(){}
+	public:
+		static tmdb::types::VideosList get(uint64_t movie_id, tmdb::types::ScanType scantype);
+	};
+	
 }
 
 
-#endif//TMDB_VIDEOS_H
+#endif//TMDB_COMMON_VIDEOS_H

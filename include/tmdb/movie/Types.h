@@ -21,6 +21,7 @@
 #include <tmdb/common/types/ProductionCountry.h>
 #include <tmdb/common/types/CastAndCrew.h>
 #include <tmdb/common/types/Genre.h>
+#include <tmdb/common/types/Videos.h>
 
 namespace tmdb
 {
@@ -234,73 +235,7 @@ namespace tmdb
 			};
 
 
-			//***************************************
-			//
-			//		Videos Type
-			//
-			//***************************************
-
-			struct VideosData
-			{
-				uint64_t	id;
-				std::string iso_639_1;
-				std::string iso_3166_1;
-				std::string key;
-				std::string name;
-				std::string site;
-				uint32_t size;
-				std::string type;
-
-				VideosData()
-				{
-					zero();
-				}
-
-				void zero()
-				{
-					id = 0;
-					iso_639_1 = "";
-					iso_3166_1 = "";
-					key = "";
-					name = "";
-					site = "";
-					size = 0;
-					type = "";
-				}
-
-				bool valid()
-				{
-					if (id == 0 || name.empty())
-					{
-						return false;
-					}
-					return true;
-				}
-			};
-
-			struct VideosList
-			{
-				std::vector<VideosData> videos;
-
-				VideosList()
-				{
-					zero();
-				}
-
-				void zero()
-				{
-					videos.clear();
-				}
-
-				bool valid()
-				{
-					if (videos.empty())
-					{
-						return false;
-					}
-					return true;
-				}
-			};
+			
 
 			//***************************************
 			//
@@ -321,14 +256,14 @@ namespace tmdb
 
 			struct Combined
 			{
-				Movie				movie;
-				tmdb::types::CastAndCrew crew;
-				AlternativeTitles	alt_titles;
-				VideosList			videos;
-				KeywordList			keywords;
+				Movie						movie;
+				tmdb::types::CastAndCrew	crew;
+				AlternativeTitles			alt_titles;
+				tmdb::types::VideosList		videos;
+				KeywordList					keywords;
 
 				::std::string			queryString;
-				int32_t				year;
+				int32_t					year;
 
 				Combined()
 				{

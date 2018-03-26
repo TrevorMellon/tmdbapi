@@ -8,6 +8,7 @@
 #include <tmdb/common/types/Genre.h>
 #include <tmdb/common/types/ProductionCompany.h>
 #include <tmdb/common/types/CastAndCrew.h>
+#include <tmdb/common/types/Videos.h>
 
 namespace tmdb
 {
@@ -90,6 +91,7 @@ namespace tmdb
 				
 				tmdb::tv::types::TV		tv;
 				tmdb::types::CastAndCrew crew;
+				tmdb::types::VideosList videos;
 
 				Combined()
 				{
@@ -100,11 +102,14 @@ namespace tmdb
 				{
 					tv.zero();
 					crew.zero();
+					videos.zero();
 				}
 
 				bool verify()
 				{
-					if (id == tv.id && id == crew.id)
+					if (id == tv.id 
+						&& id == crew.id
+						)
 					{
 						return true;
 					}

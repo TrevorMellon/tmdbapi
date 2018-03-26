@@ -23,7 +23,7 @@
 
 #include <tmdb/ApiGet.h>
 #include <tmdb/common/CastAndCrew.h>
-#include <tmdb/movie/Videos.h>
+#include <tmdb/common/Videos.h>
 #include <tmdb/movie/Keywords.h>
 #include <tmdb/movie/AlternativeTitle.h>
 #include <tmdb/Util.h>
@@ -215,8 +215,8 @@ namespace tmdb
 			}
 			if (type == Movie::VideosScan || type == Movie::AllScan)
 			{
-				movie::Videos v;
-				data->videos = v.get(data->id());
+				tmdb::Videos v;
+				data->videos = v.get(data->id(), tmdb::types::ScanType::Movie);
 			}
 			if (type == Movie::KeywordsScan || type == Movie::AllScan)
 			{

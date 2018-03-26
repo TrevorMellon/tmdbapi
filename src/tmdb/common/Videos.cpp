@@ -8,7 +8,7 @@
 *                                                    *
 ******************************************************/
 
-#include "tmdb/movie/Videos.h"
+#include "tmdb/common/Videos.h"
 
 #include "tmdb/ApiGet.h"
 
@@ -21,16 +21,23 @@
 
 using namespace tmdb;
 
-movie::types::VideosList movie::Videos::get(uint64_t movie_id)
+tmdb::types::VideosList Videos::get(uint64_t movie_id, tmdb::types::ScanType scantype)
 {
 	ApiGet &api = ApiGetSingleton::get_mutable_instance();
 
-	std::stringstream ss;
-	ss << "/3/movie/" << movie_id << "/videos";
+	std::stringstream urlss;
+	if (scantype == types::ScanType::Movie)
+	{
+		
+		urlss << "/3/movie/" << movie_id << "/videos";
+	}
+	else
+	{
+		urlss << "/3/tv/" << movie_id << "/videos";
+	}
+	std::string j = api.json(urlss.str());
 
-	std::string j = api.json(ss.str());
-
-	movie::types::VideosList vl;
+	types::VideosList vl;
 	vl.zero();
 
 	if (j.empty())
@@ -38,7 +45,7 @@ movie::types::VideosList movie::Videos::get(uint64_t movie_id)
 		return vl;
 	}
 
-	movie::types::VideosData data;
+	types::VideosData data;
 
 	rapidjson::Document d;
 	d.Parse<0>(j.c_str());
