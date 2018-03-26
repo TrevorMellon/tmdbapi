@@ -42,7 +42,7 @@ namespace tmdb
 				return true;
 			}
 
-			void copy(const types::BasicPerson &other)
+			void copyPerson(const types::BasicPerson &other)
 			{
 				this->id = other.id;
 				this->gender = other.gender;
@@ -53,12 +53,12 @@ namespace tmdb
 			void operator= (const types::BasicPerson &other)
 			{
 				zero();
-				copy(other);
+				copyPerson(other);
 			}
 
 			void operator+= (const types::BasicPerson &other)
 			{
-				copy(other);
+				copyPerson(other);
 			}
 		};
 
