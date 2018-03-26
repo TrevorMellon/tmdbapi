@@ -88,7 +88,7 @@ TEST(MovieApi, Videos)
 
 	auto mo = m->scan(cb, Movie::VideosScan);
 
-	movie::types::VideosData &vid = mo->videos.videos.at(0);
+	types::VideosData &vid = mo->videos.videos.at(0);
 
 	EXPECT_GT(vid.id, 0);
 
