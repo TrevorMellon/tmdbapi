@@ -5,8 +5,9 @@ find_package(GTest)
 SET(TEST_SRC ${PROJECT_SOURCE_DIR}/tests/test.cpp)
 
 add_executable(tmdbtest ${TEST_SRC}
-	${SOURCES}
 )
+
+target_link_libraries(tmdbtest ${LIB})
 
 target_link_libraries(tmdbtest 
 			${GTEST_BOTH_LIBRARIES} 

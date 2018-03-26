@@ -2,11 +2,21 @@ cmake_minimum_required (VERSION 2.8)
 set( VENDOR jno.io )
 project (tmdb)
 
+SET(LIB tmdb-static)
+SET(DLL tmdb)
+
+if(WIN32)
+	if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+		SET(LIB tmdb-static_d)
+		SET(DLL tmdb_d)
+	endif()
+endif(WIN32)
+
 enable_testing()
 
 option(TMDB_TEST "Building for testing" OFF)
 option(USING_OPENSSL "Use openSSL" ON)
-option(USING_CURL "Use CURL library" ON)
+option(USING_CURL "Use CURL library" OFF)
 option(DEFAULT_SSL "Default option for ssl" ON)
 set(SSL_PEM_FILE "../etc/tmdb.pem")
 
@@ -51,12 +61,11 @@ include_directories(include)
 
 #add_definitions(-DTMDB_USE_OPENSSL=1)
 
-add_library(tmdb STATIC ${SOURCES} )
+add_library(${LIB} STATIC ${SOURCES} )
+
+
 if(TMDB_TEST)
-
 	include(cmake/tests.cmake)
-
-
 	include(cmake/sonar.cmake)
 endif(TMDB_TEST)
 
