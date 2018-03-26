@@ -12,8 +12,8 @@ environment:
 
 version: 1.0.{build}
 
-only_commits:
-  message: /build/
+#only_commits:
+#  message: /build/
 
 before_build:
  - cmd: call "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" x86
