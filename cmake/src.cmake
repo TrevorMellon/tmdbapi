@@ -19,10 +19,12 @@ SET (INC_T
 
 SET (COMMON_SRC_T
 	${PROJECT_SOURCE_DIR}/src/tmdb/common/CastAndCrew.cpp
+	${PROJECT_SOURCE_DIR}/src/tmdb/common/Videos.cpp
 )
 
 SET(COMMON_INC_T
 	${PROJECT_SOURCE_DIR}/include/tmdb/common/CastAndCrew.h
+	${PROJECT_SOURCE_DIR}/include/tmdb/common/Videos.h
 )
 
 SET (COMMON_TYPES_INC_T
@@ -36,20 +38,16 @@ SET (COMMON_TYPES_INC_T
 )
 
 SET (SRC_MOVIE_T
-	${PROJECT_SOURCE_DIR}/src/tmdb/movie/AlternativeTitle.cpp	
-	#${PROJECT_SOURCE_DIR}/src/tmdb/movie/CastAndCrew.cpp
+	${PROJECT_SOURCE_DIR}/src/tmdb/movie/AlternativeTitle.cpp
 	${PROJECT_SOURCE_DIR}/src/tmdb/movie/Keywords.cpp
 	${PROJECT_SOURCE_DIR}/src/tmdb/movie/Movie.cpp
-	${PROJECT_SOURCE_DIR}/src/tmdb/movie/Videos.cpp	
 )
 
 SET(INC_MOVIE_T
 	${PROJECT_SOURCE_DIR}/include/tmdb/movie/AlternativeTitle.h	
-	#${PROJECT_SOURCE_DIR}/include/tmdb/movie/CastAndCrew.h
 	${PROJECT_SOURCE_DIR}/include/tmdb/movie/Keywords.h
 	${PROJECT_SOURCE_DIR}/include/tmdb/movie/Movie.h
 	${PROJECT_SOURCE_DIR}/include/tmdb/movie/Types.h
-	${PROJECT_SOURCE_DIR}/include/tmdb/movie/Videos.h
 )
 
 SET(SRC_TV_T
@@ -73,3 +71,5 @@ SOURCE_GROUP("source\\movie" FILES ${SRC_MOVIE_T})
 SOURCE_GROUP("include\\tv" FILES ${INC_TV_T})
 SOURCE_GROUP("source\\tv" FILES ${SRC_TV_T})
 SOURCE_GROUP("include\\common\\types" FILES ${COMMON_TYPES_INC_T})
+SOURCE_GROUP("include\\common" FILES ${COMMON_INC_T})
+SOURCE_GROUP("source\\common" FILES ${COMMON_SRC_T})

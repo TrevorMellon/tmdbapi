@@ -217,7 +217,7 @@ namespace tmdb
 			}
 			if (type == TV::VideosScan || type == TV::AllScan)
 			{
-				/*movie::Videos v;
+				tv::Videos v;
 				data->videos = v.get(data->id());*/
 			}
 			if (type == TV::KeywordsScan || type == TV::AllScan)
