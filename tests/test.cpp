@@ -196,3 +196,15 @@ TEST(TVApi, TV)
 	ASSERT_EQ(c->tv.name, "The Moomins");
 
 }
+
+TEST(TVApi, Seasons)
+{
+	std::shared_ptr<tmdb::tv::types::Combined> c(new tmdb::tv::types::Combined);
+	c->setId(60735);
+	tmdb::TV tv;
+	tv.scan(c);
+
+	size_t n = c->tv.seasons.size();
+
+	ASSERT_GT(n, 0);
+}

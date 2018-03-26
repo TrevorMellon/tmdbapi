@@ -19,7 +19,7 @@ namespace tmdb
 			struct Season
 			{
 				std::string air_date;
-				std::time_t air_date_t;
+				time_t air_date_t;
 				uint32_t	episode_count;
 				uint64_t	id;
 				std::string name;
