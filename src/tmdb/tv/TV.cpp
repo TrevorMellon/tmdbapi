@@ -400,6 +400,49 @@ namespace tmdb
 			{
 				data.number_of_seasons = r["number_of_seasons"].GetUint64();
 			}
+			if (rjcheck(r, "seasons"))
+			{
+				rapidjson::Value &rr = r["seasons"];
+				if (rr.IsArray())
+				{
+					for (auto &i : rr.GetArray())
+					{
+						tv::types::Season s;
+						if (rjcheck(i, "air_date"))
+						{
+							s.air_date = i["air_date"].GetString();
+							boost::gregorian::date d(boost::gregorian::from_string(s.air_date));
+							boost::posix_time::ptime pt(d);
+							s.air_date_t = boost::posix_time::to_time_t(pt);
+						}
+						if (rjcheck(i, "episode_count"))
+						{
+							s.episode_count = i["episode_count"].GetUint();
+						}
+						if (rjcheck(i, "id"))
+						{
+							s.id = i["id"].GetUint64();
+						}
+						if (rjcheck(i, "name"))
+						{
+							s.name = i["name"].GetString();
+						}
+						if (rjcheck(i, "overview"))
+						{
+							s.overview = i["overview"].GetString();
+						}
+						if (rjcheck(i, "poster_path"))
+						{
+							s.poster_path = i["poster_path"].GetString();
+						}
+						if (rjcheck(i, "season_number"))
+						{
+							s.season_number = i["season_number"].GetInt();
+						}
+						data.seasons.push_back(s);
+					}
+				}
+			}
 			if (rjcheck(r, "origin_country"))
 			{
 				if (r["origin_country"].IsArray())

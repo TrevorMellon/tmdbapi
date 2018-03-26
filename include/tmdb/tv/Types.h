@@ -16,6 +16,64 @@ namespace tmdb
 	{
 		namespace types
 		{
+			struct Season
+			{
+				std::string air_date;
+				std::time_t air_date_t;
+				uint32_t	episode_count;
+				uint64_t	id;
+				std::string name;
+				std::string overview;
+				std::string poster_path;
+				int32_t	season_number;
+
+				Season()
+				{
+					zero();
+				}
+
+				void zero()
+				{
+					air_date = "";
+					air_date_t = 0;
+					episode_count = 0;
+					id = 0;
+					name = "";
+					overview = "";
+					poster_path = "";
+					season_number = -1;
+				}
+
+				bool isSpecial()
+				{
+					if (season_number == 0)
+					{
+						return true;
+					}
+					return false;
+				}
+
+				bool isNormalSeason()
+				{
+					if (season_number > 0)
+					{
+						return true;
+					}
+					return false;
+				}
+
+				bool valid()
+				{
+					if (season_number >= 0
+						&& !name.empty()
+						)
+					{
+						return true;
+					}
+					return false;
+				}
+			};
+
 			//! /todo Networks, Seasons
 			struct TV
 			{
@@ -35,6 +93,7 @@ namespace tmdb
 				std::vector<tmdb::types::ProductionCompany> production_companies;
 				uint64_t		number_of_episodes;
 				uint64_t		number_of_seasons;
+				std::vector<Season> seasons;
 				std::vector<std::string> origin_country;
 				std::string		original_language;
 				std::string		original_name;
@@ -79,7 +138,7 @@ namespace tmdb
 					type = "";
 					vote_average = 0;
 					vote_count = 0;
-
+					seasons.clear();
 				}
 
 			};
