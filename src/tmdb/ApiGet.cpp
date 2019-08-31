@@ -536,19 +536,48 @@ namespace tmdb
 		a::write(s, req);
 
 		a::streambuf resp;
+		std::stringstream respss;
 
-		a::read_until(s, resp, "\r\n");
+		const size_t bufferlength = 512;
 
-		std::istream respStrm(&resp);
-		size_t headersz = resp.size();
+		size_t n = 0;
+		size_t headersz = 0;
+
+		do
+		{
+			a::streambuf tmpbuf;
+			try
+			{
+				n = a::read(s, tmpbuf, a::transfer_at_least(1));
+
+				char *b = new char[bufferlength + 1];
+				tmpbuf.sgetn(b, n);
+				b[n] = 0;
+
+				respss << b;
+
+				delete[] b;
+			}
+			catch (boost::exception& e)
+			{
+				//std::cout << boost::diagnostic_information(e) << std::endl;
+				n = 0;
+			}			
+		} while (n > 0);
+
+		std::string code;
+		std::getline(respss, code);		
+		headersz = code.size() + 1;
+		std::stringstream codess;
+		codess << code;
 		std::string httpVersion;
-		respStrm >> httpVersion;
+		codess >> httpVersion;
 		unsigned int statusCode;
-		respStrm >> statusCode;
+		codess >> statusCode;
 		std::string statusMessage;
-		std::getline(respStrm, statusMessage);
+		codess >> statusMessage;
 
-		if (!respStrm || httpVersion.substr(0, 5) != "HTTP/")
+		if (!respss || httpVersion.substr(0, 5) != "HTTP/")
 		{
 			return "";
 		}
@@ -557,11 +586,10 @@ namespace tmdb
 		{
 			return "";
 		}
-
-		a::read_until(s, resp, "\r\n\r\n");
-
+		
 		std::string header;
-		std::getline(respStrm, header);
+		std::getline(respss, header);
+		headersz += header.size() + 1;
 		size_t contentlength = 0;
 		while (header != "\r")
 		{
@@ -583,39 +611,24 @@ namespace tmdb
 				{
 					boost::trim(value);
 					contentlength = boost::lexical_cast<int>(value);
-
-					//a::read(s,resp,l);
 				}
 			}
-			std::getline(respStrm, header);
-		}
-
+			std::getline(respss, header);
+			headersz += header.size() + 1;
+		}	
 
 		boost::locale::generator g;
 		std::locale loc = g.generate("en_US.UTF-8");
 
-		std::stringstream bodyss;
-		bodyss.imbue(loc);
-		headersz = resp.size();
-		bodyss << &resp;
+		std::string message = respss.str();
 
-		try
-		{
-			a::read(s, resp, a::transfer_exactly(contentlength - headersz));
-		}
-		catch (boost::exception &e)
-		{
-			std::cout << boost::diagnostic_information(e) << std::endl;
-		}
+		std::string body(message.begin() + headersz, message.end());
 
-		bodyss << &resp;
-
-		sz = contentlength - headersz;
-
+		
 #ifdef _DEBUG
-		std::cout << bodyss.str() << std::endl;
+		std::cout << body << std::endl;
 #endif
-		return bodyss.str();		
+		return body;		
 #else
 		return http(param, sz, opts);
 #endif//TMDB_USE_OPENSSL
