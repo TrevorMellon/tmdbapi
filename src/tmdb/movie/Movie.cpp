@@ -112,8 +112,9 @@ namespace tmdb
 				{
 					movies = searchParseData(j);
 				}
-				catch (...)
+				catch (std::exception &e)
 				{
+					std::cerr << e.what() << std::endl;
 					mtx.unlock();
 					return movies;
 				}
@@ -131,7 +132,15 @@ namespace tmdb
 			}
 
 			rapidjson::Document d;
-			d.Parse<0>(j.c_str());
+			d.Parse(j.c_str());
+
+			if (!d.IsObject())
+			{
+#if _DEBUG
+				std::cout << j << std::endl;
+#endif
+				return 0;
+			}
 			
 			if (rjcheck(d, "results"))
 			{
@@ -425,9 +434,12 @@ namespace tmdb
 			if (rjcheck(r, "release_date"))
 			{
 				data.release_date = r["release_date"].GetString();
-				boost::gregorian::date d(boost::gregorian::from_string(data.release_date));
-				boost::posix_time::ptime pt(d);
-				data.release_date_t = boost::posix_time::to_time_t(pt);
+				if (!data.release_date.empty())
+				{
+					boost::gregorian::date d(boost::gregorian::from_string(data.release_date));
+					boost::posix_time::ptime pt(d);
+					data.release_date_t = boost::posix_time::to_time_t(pt);
+				}
 			}
 			if (rjcheck(r, "revenue"))
 			{
