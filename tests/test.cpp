@@ -21,11 +21,6 @@ TEST(SearchApi, SearchMovie)
 
 	EXPECT_GT(movies.size(), 0);
 
-	if (!movies.empty())
-	{
-		EXPECT_EQ(movies.at(0).id, 847);
-	}
-
 	delete m;
 }
 
@@ -111,33 +106,6 @@ TEST(MovieApi, Keywords)
 	EXPECT_GT(kw.first, 0);
 
 	ASSERT_NE(kw.second, "");
-
-	delete m;
-}
-
-TEST(Configuration, Configuration)
-{
-	Movie *m = new Movie();
-
-	std::shared_ptr<movie::types::Combined> cb(new movie::types::Combined);
-	cb->setId(101);
-
-	auto ms = m->scan(cb, Movie::MovieScan);
-
-	std::string partialurl = ms->movie.backdrop_path;
-
-	Configuration &c = ConfigurationSingleton::get_mutable_instance();
-
-	std::string url =
-		c.getImageUrl(ImageTypeBackdrop, ImageMedium, partialurl);
-
-	std::stringstream ss;
-
-	ss << "http://image.tmdb.org/t/p/"
-		<< "w780"
-		<< "/mGN0lH2phYfesyEVqP2xvGUaxAQ.jpg";
-
-	EXPECT_EQ(ss.str(), url);
 
 	delete m;
 }
