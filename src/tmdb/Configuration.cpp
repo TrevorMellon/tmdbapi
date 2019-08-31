@@ -24,9 +24,9 @@ namespace tmdb
 		void parse(std::string j)
 		{
 			rj::Document doc;
-			doc.Parse<0>(j.c_str());
+			doc.Parse(j.c_str());
 
-			if (doc.HasMember("images"))
+			if (doc.IsObject() && doc.HasMember("images"))
 			{
 
 				rj::Value &dd = doc["images"];
