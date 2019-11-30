@@ -1,9 +1,6 @@
 cmake_minimum_required (VERSION 2.8)
 set( VENDOR jno.io )
-project (tmdb)
-
-SET(LIB tmdb-static)
-SET(DLL tmdb)
+project (tmdbapi)
 
 if(WIN32)
 	if(CMAKE_BUILD_TYPE STREQUAL "Debug")
@@ -14,11 +11,17 @@ endif(WIN32)
 
 enable_testing()
 
-option(TMDB_TEST "Building for testing" OFF)
 option(USING_OPENSSL "Use openSSL" ON)
 option(USING_CURL "Use CURL library" OFF)
 option(DEFAULT_SSL "Default option for ssl" ON)
+option(BUILD_STATIC "Build the static library" OFF)
+option(BUILD_SHARED "Build the shared library" ON)
+option(BUILD_TEST "Building for testing" OFF)
 set(SSL_PEM_FILE "../etc/tmdb.pem")
+
+if(BUILD_SHARED AND BUILD_STATIC)
+    message(ERROR "Can't build shared and static at the same time")
+endif(BUILD_SHARED AND BUILD_STATIC)
 
 if(NOT DEFINED TMDB_API_KEY)
 	message(FATAL_ERROR "TMDB_API_KEY must be defined")
@@ -58,14 +61,16 @@ configure_file(templates/config.h.in ${PROJECT_SOURCE_DIR}/include/tmdb/config.h
 
 include_directories(include)
 
+if(BUILD_STATIC)
+    add_library(${PROJECT_NAME} STATIC ${SOURCES} )
+endif(BUILD_STATIC)
 
-#add_definitions(-DTMDB_USE_OPENSSL=1)
+if(BUILD_SHARED)
+    add_library(${PROJECT_NAME} SHARED ${SOURCES})
+endif(BUILD_SHARED)
 
-add_library(${LIB} STATIC ${SOURCES} )
-
-
-if(TMDB_TEST)
+if(BUILD_TEST)
 	include(cmake/tests.cmake)
 	include(cmake/sonar.cmake)
-endif(TMDB_TEST)
+endif(BUILD_TEST)
 
