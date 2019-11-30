@@ -1,13 +1,6 @@
 cmake_minimum_required (VERSION 2.8)
-set( VENDOR jno.io )
+set( VENDOR ignifi )
 project (tmdbapi)
-
-if(WIN32)
-	if(CMAKE_BUILD_TYPE STREQUAL "Debug")
-		SET(LIB tmdb-static_d)
-		SET(DLL tmdb_d)
-	endif()
-endif(WIN32)
 
 enable_testing()
 
