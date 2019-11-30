@@ -150,7 +150,7 @@ namespace tmdb
 
 					overview = "";
 
-					popularity = 0.0f;
+                    popularity = 0.0;
 
 					poster_path = "";
 
@@ -166,7 +166,7 @@ namespace tmdb
 
 					video = false;
 
-					vote_average = 0.0f;
+                    vote_average = 0.0;
 					vote_count = 0;
 
 					spoken_languages.clear();
@@ -314,6 +314,7 @@ namespace tmdb
 					this->videos = other.videos;
 					this->queryString = other.queryString;
 					this->year = other.year;
+                    return *this;
 				}
 			};
 		}//namespace types;
