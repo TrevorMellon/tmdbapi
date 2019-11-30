@@ -85,7 +85,7 @@ TEST(MovieApi, Videos)
 
 	types::VideosData &vid = mo->videos.videos.at(0);
 
-	EXPECT_GT(vid.id, 0);
+    EXPECT_NE(vid.id, "");
 
 	ASSERT_NE(vid.name, "");
 

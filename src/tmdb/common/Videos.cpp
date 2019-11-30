@@ -46,6 +46,7 @@ tmdb::types::VideosList Videos::get(uint64_t movie_id, tmdb::types::ScanType sca
 	}
 
 	types::VideosData data;
+        data.zero();
 
 	rapidjson::Document d;
 	d.Parse<0>(j.c_str());
@@ -57,10 +58,10 @@ tmdb::types::VideosList Videos::get(uint64_t movie_id, tmdb::types::ScanType sca
 			rapidjson::Value &r1 = d["results"];
 			for (auto &rr : r1.GetArray())
 			{
-				data.zero();
+                                data.zero();
 				if (rjcheck(rr, "id"))
 				{
-					data.id = rr["id"].GetInt64();
+                                        data.id = rr["id"].GetString();
 				}
 				if (rjcheck(rr, "iso_639_1"))
 				{

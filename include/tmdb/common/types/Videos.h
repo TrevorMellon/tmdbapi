@@ -12,7 +12,7 @@ namespace tmdb
 
 		struct VideosData
 		{
-			uint64_t	id;
+            std::string	id;
 			std::string iso_639_1;
 			std::string iso_3166_1;
 			std::string key;
@@ -28,7 +28,7 @@ namespace tmdb
 
 			void zero()
 			{
-				id = 0;
+                id = "";
 				iso_639_1 = "";
 				iso_3166_1 = "";
 				key = "";
@@ -40,7 +40,7 @@ namespace tmdb
 
 			bool valid()
 			{
-				if (id == 0 || name.empty())
+                if (id.empty() || name.empty())
 				{
 					return false;
 				}
