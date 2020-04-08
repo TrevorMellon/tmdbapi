@@ -7,5 +7,6 @@ build:
         - mkdir -p b
         - cd b
         - cmake -DCMAKE_BUILD_TYPE=Release 
-           -DTMDB_API_KEY=$TMDB_KEY ..
+           -DTMDB_API_KEY=$TMDB_KEY 
+           -DTMDB_TEST=ON ..
         - make
