@@ -8,6 +8,6 @@ build:
         - cd b
         - cmake -DCMAKE_BUILD_TYPE=Release 
            -DTMDB_API_KEY=$TMDB_KEY 
-           -DTMDB_TEST=ON ..
+           -BUILD_TEST=ON ..
         - make -j 4
         - ctest -V
