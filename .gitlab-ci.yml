@@ -9,4 +9,5 @@ build:
         - cmake -DCMAKE_BUILD_TYPE=Release 
            -DTMDB_API_KEY=$TMDB_KEY 
            -DTMDB_TEST=ON ..
-        - make
+        - make -j 4
+        - ctest -V
