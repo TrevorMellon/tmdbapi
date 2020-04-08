@@ -5,6 +5,8 @@ before_script:
     - apt install --yes cmake
 
 build:
+    tags:
+        - linux
     script:
         - mkdir -p b
         - cd b
