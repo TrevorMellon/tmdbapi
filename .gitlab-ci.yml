@@ -1,0 +1,12 @@
+image: gcc:latest
+
+before_script:
+    - apt update --yes
+    - apt install --yes cmake
+
+build:
+    script:
+        - mkdir -p b
+        - cd b
+        - cmake -DCMAKE_BUILD_TYPE=Release ..
+        - make
