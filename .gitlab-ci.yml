@@ -1,9 +1,5 @@
 image: gcc:latest
 
-before_script:
-    - apt update --yes
-    - apt install --yes cmake
-
 build:
     tags:
         - linux
