@@ -12,6 +12,8 @@ build:
         - apt -y install libssl-dev
         - apt -y install rapidjson-dev
         - apt -y install libicu-dev
+        - apt -y install libcurl4-openssl-dev
+        - apt -y install libgtest-dev
     
     script:
         - mkdir -p b
