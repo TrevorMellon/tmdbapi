@@ -1,4 +1,3 @@
-
 build:
     tags:
         - linux
@@ -7,7 +6,11 @@ build:
     
     before_script:
         - apt -y update
+        - apt -y install gcc
         - apt -y install cmake
+        - apt -y install libboost1.67-all-dev
+        - apt -y install libssl-dev
+        - apt -y install rapidjson-dev
     
     script:
         - mkdir -p b
