@@ -1,8 +1,10 @@
-image: gcc:latest
+
 
 build:
     tags:
         - linux
+        - docker
+    image: ubuntu:18.04
     script:
         - mkdir -p b
         - cd b
