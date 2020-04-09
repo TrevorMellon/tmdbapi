@@ -4,7 +4,7 @@ project (tmdbapi)
 
 enable_testing()
 
-option(USING_OPENSSL "Use openSSL" ON)
+option(USING_OPENSSL "Use openSSL" OFF)
 option(USING_CURL "Use CURL library" OFF)
 option(DEFAULT_SSL "Default option for ssl" ON)
 option(BUILD_STATIC "Build the static library" OFF)
