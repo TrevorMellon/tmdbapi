@@ -1,10 +1,14 @@
 
-
 build:
     tags:
         - linux
         - docker
     image: ubuntu:18.04
+    
+    before_script:
+        - apt -y update
+        - apt -y install cmake
+    
     script:
         - mkdir -p b
         - cd b
