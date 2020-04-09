@@ -38,6 +38,7 @@ include/tmdb/config.h
 vs/**
 
 build/**
+b/**
 
 # Sonar
 sonar/**
