@@ -8,9 +8,10 @@ build:
         - apt -y update
         - apt -y install gcc
         - apt -y install cmake
-        - apt -y install libboost1.67-all-dev
+        - apt -y install libboost1.65-all-dev
         - apt -y install libssl-dev
         - apt -y install rapidjson-dev
+        - apt -y install libicu-dev
     
     script:
         - mkdir -p b
