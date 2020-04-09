@@ -1,8 +1,26 @@
-image: gcc:latest
-
 build:
     tags:
         - linux
+        - docker
+    image: ubuntu:18.04
+    
+    before_script:
+        - apt -y update
+        - apt -y install gcc
+        - apt -y install cmake
+        - apt -y install libboost1.65-all-dev
+        - apt -y install libssl-dev
+        - apt -y install rapidjson-dev
+        - apt -y install libicu-dev
+        - apt -y install libcurl4-openssl-dev
+        - apt -y install libgtest-dev
+        - c=$PWD
+        - cd /usr/src/gtest
+        - cmake CMakeLists.txt
+        - make
+        - cp *.a /usr/lib
+        - cd $c
+    
     script:
         - mkdir -p b
         - cd b
