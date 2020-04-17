@@ -41,7 +41,7 @@ build-mingw:
     
     before_script:
         - pacman -Syuu --noconfirm
-        - pacman -S --noconfirm cmake boost-libs rapidjson
+        - pacman -S --noconfirm cmake boost-libs boost rapidjson
         - pacman -S --noconfirm openssl-1.0 curl gtest
         - pacman -S --noconfirm make gcc
         
