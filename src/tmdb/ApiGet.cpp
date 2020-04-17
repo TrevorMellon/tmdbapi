@@ -161,16 +161,43 @@ namespace tmdb
 
 	class ApiGetPrivate
 	{
+#if TMDB_USE_CURL
+    public:
+        struct MemoryChunk
+        {
+            char *_chunk;
+            size_t _sz;
+            MemoryChunk()
+            {
+                _chunk = nullptr;
+                _sz = 0;
+            }
+        };
+#endif
 	public:
 		ApiGetPrivate(ApiGet *q, bool usessl = TMDB_DEFAULT_SSL)
 		{
 			_q = q;
 			_usessl = usessl;
+#if TMDB_USE_CURL
+            _curl = curl_easy_init();
+#endif
 		}
+
+        ~ApiGetPrivate()
+        {
+#if TMDB_USE_CURL
+            curl_easy_cleanup(_curl);
+#endif
+        }
 	public:
 		std::string json(const std::string &url, const QueryOptions &opt = QueryOptions());
 		std::string http(const HostParams &params, size_t &sz, const QueryOptions &opt = QueryOptions());
 		std::string https(const HostParams &params, size_t &sz, const QueryOptions &opt = QueryOptions());
+#if TMDB_USE_CURL
+        std::string http_curl(const HostParams &params, size_t &sz, const QueryOptions &opt = QueryOptions());
+        static size_t write_curl(char *ptr, size_t size, size_t nmemb, void *userdata);
+#endif
 		std::shared_ptr<uint8_t> getImage(std::string url, size_t &sz);
 		void saveImage(std::string url, std::string filename);
 	public:
@@ -181,6 +208,9 @@ namespace tmdb
 		bool _usessl;
 		boost::mutex mtx;
 		boost::mutex imagesaveMtx;
+#if TMDB_USE_CURL
+        CURL  *_curl;
+#endif
 	};
 
 	boost::posix_time::ptime ApiGetPrivate::_tp = boost::posix_time::microsec_clock::local_time();
@@ -199,7 +229,10 @@ namespace tmdb
 
 		size_t sz = 0;
 
-#if TMDB_USE_OPENSSL
+#if TMDB_USE_CURL
+        data = http_curl(param, sz, opt);
+
+#elif TMDB_USE_OPENSSL
 		if (_usessl)
 		{
 			
@@ -207,10 +240,10 @@ namespace tmdb
 		}
 		else
 		{
-#endif
 			data = http(param, sz, opt);
-#if TMDB_USE_OPENSSL
 		}
+#else
+        data = http(param, sz, opt);
 #endif
 		mtx.unlock();
 
@@ -633,6 +666,91 @@ namespace tmdb
 		return http(param, sz, opts);
 #endif//TMDB_USE_OPENSSL
 	}
+
+#if TMDB_USE_CURL
+    std::string ApiGetPrivate::http_curl(const HostParams &param, size_t &sz, const QueryOptions &opts)
+    {
+        boost::posix_time::ptime start, stop;
+        boost::posix_time::time_duration diff;
+
+        boost::posix_time::seconds secs(10);
+        secs /= 30;
+
+        start = boost::posix_time::microsec_clock::local_time();
+
+        diff = start - _tp;
+
+        while (diff < secs)
+        {
+            boost::this_thread::sleep(boost::posix_time::milliseconds(5));
+            start = boost::posix_time::microsec_clock::local_time();
+            diff = start - _tp;
+        }
+
+        _tp = boost::posix_time::microsec_clock::local_time();
+
+        std::stringstream getSS;
+
+        getSS << "http://api.themoviedb.org";
+
+        if (param.url != "")
+        {
+            getSS << param.url;
+        }
+        else
+        {
+            getSS << _url;
+        }
+        getSS << "?api_key=" << TMDB_API_KEY;
+
+        for (auto i: opts)
+        {
+            std::string key = i.first;
+            std::string value = i.second;
+            std::wstring v2 = boost::locale::conv::to_utf<wchar_t>(value, "UTF-8");
+            std::stringstream optSS;
+            optSS << "&" << key;
+            optSS << "=" << url_encode(v2);
+
+            getSS << optSS.str();
+        }
+
+        curl_easy_setopt(_curl, CURLOPT_URL, getSS.str().c_str());
+        curl_easy_setopt(_curl, CURLOPT_WRITEFUNCTION, &ApiGetPrivate::write_curl);
+
+        MemoryChunk chunk;
+        chunk._sz = 0;
+        chunk._chunk = (char*)malloc(1);
+
+        curl_easy_setopt(_curl, CURLOPT_WRITEDATA, &chunk);
+
+        CURLcode hr =  curl_easy_perform(_curl);
+
+        if(hr != CURLE_OK)
+        {
+            return "";
+        }
+
+        std::string ret(chunk._chunk);
+
+        return ret;
+    }
+
+    size_t ApiGetPrivate::write_curl(char *ptr, size_t size, size_t nmemb, void *userdata)
+    {
+        size_t newSize = size * nmemb;
+
+        MemoryChunk *chnk = (MemoryChunk*)userdata;
+
+        char *out = (char*)realloc(chnk->_chunk,chnk->_sz + newSize +1);
+        chnk->_chunk = out;
+        memcpy(&(chnk->_chunk[chnk->_sz]), ptr, nmemb);
+        chnk->_sz += newSize;
+        chnk->_chunk[chnk->_sz] = 0;
+
+        return newSize;
+    }
+#endif
 }//namespace tmdb
 
 ApiGet::ApiGet(bool usessl)
