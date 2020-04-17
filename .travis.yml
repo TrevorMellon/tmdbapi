@@ -38,7 +38,7 @@ cache:
 
 before_install:
   - sudo apt-get -qq update
-  - sudo apt-get install -y curl libboost1.62-all-dev libboost1.62-all-dev
+  - sudo apt-get install -y curl libboost1.62-all-dev libboost1.62-all-dev rapidjson-dev
   - cd ${HOME}
   - mkdir -p depend
   - cd depend   
