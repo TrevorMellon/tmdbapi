@@ -1,6 +1,6 @@
 
 language: cpp
-dist: trusty
+dist: bionic
 sudo: required
 compiler:
  - gcc
@@ -37,41 +37,20 @@ cache:
   ${HOME}/depend
 
 before_install:
-  - eval "${MATRIX_EVAL}"
   - sudo apt-get -qq update
-  - sudo apt-get install -y curl
+  - sudo apt-get install -y curl libboost1.62-all-dev libboost1.62-all-dev
   - cd ${HOME}
   - mkdir -p depend
-  - cd depend
-  - if [ ! -f cmake-3.10.2.tar.gz ]; then wget $CMAKE_URL; fi
-  - if [ ! -d cmake-3.10.2 ]; then tar -xzf cmake-3.10.2.tar.gz; fi
-  - if [ ! -d rapidjson ]; then git clone $RAPID_JSON_URL; fi
-  - if [ ! -d googletest ]; then git clone $GTEST_URL; fi
-  - if [ ! -f boost_1_65_1.tar.gz ]; then curl -Ls -o boost_1_65_1.tar.gz $BOOST_URL; fi
-  - if [ ! -d boost_1_65_1 ]; then tar -xzf boost_1_65_1.tar.gz; fi
-  - cd cmake-3.10.2
-  - ./configure --prefix=/usr
-  - make
-  - sudo make install
-  - cd ..
-  - cd boost_1_65_1
-  - ./bootstrap.sh
-  - ./b2 stage
-  - sudo ./b2 install --prefix=/usr
-  - cd ..
+  - cd depend   
+  - if [ ! -d googletest ]; then git clone $GTEST_URL; fi  
   - cd googletest
   - cmake -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr .
   - make
   - sudo make install
   - cd ..
-  - cd rapidjson
-  - cmake -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr .
-  - make
-  - sudo make install
 
 script:
- - cd $TRAVIS_BUILD_DIR 
- - eval "${MATRIX_EVAL}"
+ - cd $TRAVIS_BUILD_DIR
  - mkdir -p build
  - cd build
  - cmake -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Release -DTMDB_API_KEY=${TMDB_KEY} -DTMDB_TEST=ON ..
