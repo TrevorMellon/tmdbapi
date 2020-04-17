@@ -741,6 +741,7 @@ namespace tmdb
         }
 
         std::string ret(chunk._chunk);
+		free(chunk._chunk);
 
         return ret;
     }
