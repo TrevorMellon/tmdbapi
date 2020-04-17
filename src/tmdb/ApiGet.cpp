@@ -691,7 +691,16 @@ namespace tmdb
 
         std::stringstream getSS;
 
-        getSS << "http://api.themoviedb.org";
+        if(_usessl)
+        {
+            getSS << "https://api.themoviedb.org";
+        }
+        else
+        {
+            getSS << "http://api.themoviedb.org";
+        }
+
+
 
         if (param.url != "")
         {
