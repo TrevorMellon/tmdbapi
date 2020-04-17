@@ -43,6 +43,7 @@ build-mingw:
         - pacman -Syuu --noconfirm
         - pacman -S --noconfirm cmake boost-libs rapidjson
         - pacman -S --noconfirm openssl-1.0 curl gtest
+        - pacman -S --noconfirm make gcc
         
     script:
         - mkdir -p b
