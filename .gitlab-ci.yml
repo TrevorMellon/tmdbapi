@@ -1,4 +1,4 @@
-build:
+build-nix:
     tags:
         - linux
         - docker
@@ -32,3 +32,27 @@ build:
            ..
         - make -j 4
         - ctest -V
+        
+build-mingw:
+    tags:
+        - linux
+        - docker
+    image: manjarolinux/base:latest
+    
+    before_script:
+        - pacman -Syuu --noconfirm
+        - pacman -S --noconfirm cmake boost-libs rapidjson
+        - pacman -S --noconfirm openssl-1.0 curl gtest
+        
+    script:
+        - mkdir -p b
+        - cd b
+        - cmake -DCMAKE_BUILD_TYPE=Release 
+           -DTMDB_API_KEY=$TMDB_KEY 
+           -DBUILD_TEST=ON 
+           -DBUILD_STATIC=ON
+           -DBUILD_SHARED=OFF
+           ..
+        - make -j 4
+        - ctest -V
+
