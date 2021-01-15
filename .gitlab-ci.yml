@@ -45,7 +45,7 @@ build-win10:
         - cmd /c "echo SET PATH=e:\sdk\shared\bin:%PATH% >> b.bat"
         - cmd /c "echo SET include=e:\sdk\shared\include:%include% >> b.bat"
         - cmd /c "echo SET lib=e:\sdk\shared\lib:%lib% >> b.bat"
-        - cmd /c 'echo cmake -G "NMake Makefiles" -DTMDB_API_KEY=%TMDB_KEY% -DBUILD_TEST=ON .. >> b.bat"
+        - cmd /c 'echo cmake -G "NMake Makefiles" -DTMDB_API_KEY=%TMDB_KEY% -DBUILD_TEST=ON .. >> b.bat'
         - cmd /c "echo nmake >> b.bat"
         - cmd /c "echo ctest -V >> b.bat"
 
