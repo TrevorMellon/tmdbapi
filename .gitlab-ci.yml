@@ -43,18 +43,19 @@ build-win10:
     before_script:
         - mkdir win10
         - cd win10
-        - cmd /c "echo SET SDK_ROOT=e:\sdk\shared>b.bat"
+                
+        - cmd /c "echo call vcvarsall x64 > mybuild.bat"
         
-        - cmd /c "echo call vcvarsall x64 > b.bat"
-        
-        - cmd /c "echo SET PATH=e:\sdk\shared\bin;%PATH%>> b.bat"
-        - cmd /c "echo SET include=e:\sdk\shared\include;%include%>> b.bat"
-        - cmd /c "echo SET lib=e:\sdk\shared\lib;%lib%>> b.bat"
+        - cmd /c "echo SET SDK_ROOT=e:\sdk\shared>> mybuild.bat"
+        - cmd /c "echo SET PATH=%SDK_ROOT%\bin;%PATH%>> mybuild.bat"
+        - cmd /c "echo SET include=%SDK_ROOT%\include;%include%>> mybuild.bat"
+        - cmd /c "echo SET lib=%SDK_ROOT%\lib;%lib%>> mybuild.bat"
 
-        - cmd /c 'echo cmake -G "NMake Makefiles" -DTMDB_API_KEY=%TMDB_KEY% -DBUILD_TEST=ON -DCMAKE_BUILD_TYPE=Release .. >> b.bat'
-        - cmd /c "echo nmake >> b.bat"
-        - cmd /c "echo ctest -V >> b.bat"
+
+        - cmd /c 'echo cmake -G "NMake Makefiles" -DTMDB_API_KEY=%TMDB_KEY% -DBUILD_TEST=ON -DCMAKE_BUILD_TYPE=Release .. >> mybuild.bat'
+        - cmd /c "echo nmake >> mybuild.bat"
+        - cmd /c "echo ctest -V >> mybuild.bat"
 
     script: 
-        - cmd /c b.bat
+        - cmd /c mybuild.bat
         
