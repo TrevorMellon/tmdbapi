@@ -1,11 +1,11 @@
 /*****************************************************
-*                                                    *
-*  copyright (c) 2018 Trevor Mellon                  *
-*  For further information contact t@jno.io          *
-*                                                    *
-*  Licensed under the BSD 3-clause license           *
-*  See LICENCE file for more information             *
-*                                                    *
+*                                                    
+*  copyright (c) 2018 Trevor Mellon                  
+*  For further information contact codified@ignifi.me        
+*                                                    
+*  Licensed under the BSD 3-clause license           
+*  See LICENCE file for more information             
+*                                                    
 ******************************************************/
 
 #include <tmdb/ApiGet.h>
@@ -40,8 +40,6 @@
 
 namespace a = boost::asio;
 namespace t = boost::asio::ip;
-
-
 
 using namespace tmdb;
 
@@ -214,8 +212,6 @@ namespace tmdb
 	};
 
 	boost::posix_time::ptime ApiGetPrivate::_tp = boost::posix_time::microsec_clock::local_time();
-
-	
 
 	std::string ApiGetPrivate::json(const std::string &partialurl, const QueryOptions &opt)
 	{
