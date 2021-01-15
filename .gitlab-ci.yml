@@ -44,12 +44,13 @@ build-win10:
         - mkdir win10
         - cd win10
         - cmd /c "echo SET SDK_ROOT=e:\sdk\shared>b.bat"
+        
+        - cmd /c "echo call vcvarsall x64 > b.bat"
+        
         - cmd /c "echo SET PATH=e:\sdk\shared\bin;%PATH%>> b.bat"
         - cmd /c "echo SET include=e:\sdk\shared\include;%include%>> b.bat"
         - cmd /c "echo SET lib=e:\sdk\shared\lib;%lib%>> b.bat"
 
-        - cmd /c "echo call vcvarsall x64 > b.bat"
-        
         - cmd /c 'echo cmake -G "NMake Makefiles" -DTMDB_API_KEY=%TMDB_KEY% -DBUILD_TEST=ON -DCMAKE_BUILD_TYPE=Release .. >> b.bat'
         - cmd /c "echo nmake >> b.bat"
         - cmd /c "echo ctest -V >> b.bat"
