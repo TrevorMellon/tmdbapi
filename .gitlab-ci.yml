@@ -41,7 +41,7 @@ build-win10:
         - win10
 
     before_script:
-        - cmd /c "echo call vcvarsall.bat x64 > b.bat"
+        - cmd /c "echo call vcvarsall x64 > b.bat"
         - cmd /c "echo SET PATH=e:\sdk\shared\bin;%PATH% >> b.bat"
         - cmd /c "echo SET include=e:\sdk\shared\include;%include% >> b.bat"
         - cmd /c "echo SET lib=e:\sdk\shared\lib;%lib% >> b.bat"
