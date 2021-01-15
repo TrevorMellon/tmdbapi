@@ -43,6 +43,7 @@ build-win10:
     before_script:
         - mkdir win10
         - cd win10
+        - del /s /q *
                 
         - cmd /c "echo call vcvarsall x64 > mybuild.bat"
         
