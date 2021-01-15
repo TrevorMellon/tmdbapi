@@ -33,27 +33,23 @@ build-nix:
         - make -j 4
         - ctest -V
         
-build-mingw:
+
+
+build-win10:
     tags:
-        - linux
-        - docker
-    image: manjarolinux/base:latest
-    
+        -windows
+        -win10
+
     before_script:
-        - pacman -Syuu --noconfirm
-        - pacman -S --noconfirm cmake boost-libs boost rapidjson
-        - pacman -S --noconfirm openssl-1.0 curl gtest
-        - pacman -S --noconfirm make gcc
-        
-    script:
-        - mkdir -p b
-        - cd b
-        - cmake -DCMAKE_BUILD_TYPE=Release 
-           -DTMDB_API_KEY=$TMDB_KEY 
-           -DBUILD_TEST=ON 
-           -DBUILD_STATIC=ON
-           -DBUILD_SHARED=OFF
-           ..
-        - make -j 4
+        - echo "call C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvarsall.bat x64" > b.bat
+        - echo "SET PATH=e:\sdk\shared\bin:%PATH%" >> b.bat
+        - echo "SET include=e:\sdk\shared\include:%include%" >> b.bat
+        - echo "SET lib=e:\sdk\shared\lib:%lib%" >> b.bat
+        - echo "" >> b.bat
+        - echo 'cmake -G "NMake Makefiles" -DTMDB_API_KEY=%TMDB_KEY% -DBUILD_TEST=ON ..'
+        - nmake
         - ctest -V
 
+    script: 
+        - cmd /c b.bat
+        
