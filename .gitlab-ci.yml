@@ -51,6 +51,7 @@ build-win10:
         - cmd /c "echo SET include=%SDK_ROOT%\include;%include%>> mybuild.bat"
         - cmd /c "echo SET lib=%SDK_ROOT%\lib;%lib%>> mybuild.bat"
 
+        - cmd /c "echo Path:%PATH% >> mybuild.bat"
 
         - cmd /c 'echo cmake -G "NMake Makefiles" -DTMDB_API_KEY=%TMDB_KEY% -DBUILD_TEST=ON -DCMAKE_BUILD_TYPE=Release .. >> mybuild.bat'
         - cmd /c "echo nmake >> mybuild.bat"
