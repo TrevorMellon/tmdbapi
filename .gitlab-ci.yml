@@ -37,8 +37,8 @@ build-nix:
 
 build-win10:
     tags:
-        -windows
-        -win10
+        - windows
+        - win10
 
     before_script:
         - echo "call C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvarsall.bat x64" > b.bat
