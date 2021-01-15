@@ -43,8 +43,7 @@ build-win10:
     before_script:
         - mkdir win10
         - cd win10
-        - del /s /q *
-                
+                        
         - cmd /c "echo call vcvarsall x64 > mybuild.bat"
         
         - cmd /c "echo SET SDK_ROOT=e:\sdk\shared>> mybuild.bat"
@@ -52,7 +51,7 @@ build-win10:
         - cmd /c "echo SET include=%SDK_ROOT%\include;%include%>> mybuild.bat"
         - cmd /c "echo SET lib=%SDK_ROOT%\lib;%lib%>> mybuild.bat"
 
-        - cmd /c "echo Path:%PATH% >> mybuild.bat"
+        - cmd /c "echo echo Path:%PATH% >> mybuild.bat"
 
         - cmd /c 'echo cmake -G "NMake Makefiles" -DTMDB_API_KEY=%TMDB_KEY% -DBUILD_TEST=ON -DCMAKE_BUILD_TYPE=Release .. >> mybuild.bat'
         - cmd /c "echo nmake >> mybuild.bat"
