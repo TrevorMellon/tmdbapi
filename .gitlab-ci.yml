@@ -2,61 +2,54 @@ build-nix:
     tags:
         - linux
         - docker
-    image: ubuntu:18.04
-    
+        - x64
+    image: ubuntu:20.04    
     before_script:
-        - apt -y update
-        - apt -y install gcc
-        - apt -y install cmake
-        - apt -y install libboost1.65-all-dev
-        - apt -y install libssl-dev
-        - apt -y install rapidjson-dev
-        - apt -y install libicu-dev
-        - apt -y install libcurl4-openssl-dev
-        - apt -y install libgtest-dev
-        - c=$PWD
-        - cd /usr/src/gtest
-        - cmake CMakeLists.txt
-        - make
-        - cp *.a /usr/lib
-        - cd $c
+        - export TZ=Europe/Dublin
+        - ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+        - apt -y update && apt -y install gcc g++ cmake make git ssh
+        - apt -y install libboost1.71-all-dev libssl-dev rapidjson-dev libicu-dev libcurl4-openssl-dev libgtest-dev
+        #- c=$PWD
+        #- cd /usr/src/gtest
+        #- cmake CMakeLists.txt
+        #- make
+        #- cp *.a /usr/lib
+        #- cd $c
     
     script:
-        - mkdir -p b
-        - cd b
+        - mkdir -p build && cd build
         - cmake -DCMAKE_BUILD_TYPE=Release 
            -DTMDB_API_KEY=$TMDB_KEY 
            -DBUILD_TEST=ON 
            -DBUILD_STATIC=ON
            -DBUILD_SHARED=OFF
            ..
-        - make -j 4
+        - make
         - ctest -V
         
 
 
-build-win10:
-    tags:
-        - windows
-        - win10
-
-    before_script:
-        - mkdir win10
-        - cd win10
-                        
-        - cmd /c "echo call vcvarsall x64 > mybuild.bat"
-        
-        - cmd /c "echo SET SDK_ROOT=e:\sdk\shared>> mybuild.bat"
-        - cmd /c "echo SET PATH=%SDK_ROOT%\bin;%PATH%>> mybuild.bat"
-        - cmd /c "echo SET include=%SDK_ROOT%\include;%include%>> mybuild.bat"
-        - cmd /c "echo SET lib=%SDK_ROOT%\lib;%lib%>> mybuild.bat"
-
-        - cmd /c "echo echo Path:%PATH% >> mybuild.bat"
-
-        - cmd /c 'echo cmake -G "NMake Makefiles" -DTMDB_API_KEY=%TMDB_KEY% -DBUILD_TEST=ON -DCMAKE_BUILD_TYPE=Release .. >> mybuild.bat'
-        - cmd /c "echo nmake >> mybuild.bat"
-        - cmd /c "echo ctest -V >> mybuild.bat"
-
-    script: 
-        - cmd /c mybuild.bat
-        
+#build-win10:
+#    tags:
+#        - windows
+#        - win10
+#    before_script:
+#        - mkdir win10
+#        - cd win10
+#                        
+#        - cmd /c "echo call vcvarsall x64 > mybuild.bat"
+#        
+#        - cmd /c "echo SET SDK_ROOT=e:\sdk\shared>> mybuild.bat"
+#        - cmd /c "echo SET PATH=%SDK_ROOT%\bin;%PATH%>> mybuild.bat"
+#        - cmd /c "echo SET include=%SDK_ROOT%\include;%include%>> mybuild.bat"
+#        - cmd /c "echo SET lib=%SDK_ROOT%\lib;%lib%>> mybuild.bat"
+#
+#        - cmd /c "echo echo Path:%PATH% >> mybuild.bat"
+#
+#        - cmd /c 'echo cmake -G "NMake Makefiles" -DTMDB_API_KEY=%TMDB_KEY% -DBUILD_TEST=ON -DCMAKE_BUILD_TYPE=Release .. >> mybuild.bat'
+#        - cmd /c "echo nmake >> mybuild.bat"
+#        - cmd /c "echo ctest -V >> mybuild.bat"
+#
+#    script: 
+#        - cmd /c mybuild.bat
+#        
