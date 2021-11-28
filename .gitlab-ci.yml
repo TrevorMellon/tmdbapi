@@ -48,8 +48,8 @@ sonar-linux:
         - mkdir -p build && cd build
         - cmake -DCMAKE_BUILD_TYPE=Release
             -DTMDB_API_KEY=$TMDB_KEY -DBUILD_TEST=ON -DBUILD_STATIC=ON -DBUILD_SHARED=OFF ..        
-        - .sonar/build-wrapper-linux-x86/build-wrapper-linux-x86-64 --out-dir .sonar/bw-output make
-        - .sonar/sonar-scanner-4.6.2.2472-linux/bin/sonar-scanner -Dsonar.cfamily.build-wrapper-output=.sonar/bw-output
+        - ../.sonar/build-wrapper-linux-x86/build-wrapper-linux-x86-64 --out-dir .sonar/bw-output make
+        - ../.sonar/sonar-scanner-4.6.2.2472-linux/bin/sonar-scanner -Dsonar.cfamily.build-wrapper-output=.sonar/bw-output
             -Dsonar.host.url="${SONAR_HOST_URL}" -Dsonar.token="${SONAR_TOKEN}"
     cache:
       paths:
