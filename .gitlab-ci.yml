@@ -1,21 +1,20 @@
-build-nix:
+stages:
+    - build
+    - sonar
+
+
+build-linix:
     tags:
         - linux
         - docker
         - x64
-    image: ubuntu:20.04    
+    image: ubuntu:20.04 
+    stage: build   
     before_script:
         - export TZ=Europe/Dublin
         - ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
         - apt -y update && apt -y install gcc g++ cmake make git ssh
-        - apt -y install libboost1.71-all-dev libssl-dev rapidjson-dev libicu-dev libcurl4-openssl-dev libgtest-dev
-        #- c=$PWD
-        #- cd /usr/src/gtest
-        #- cmake CMakeLists.txt
-        #- make
-        #- cp *.a /usr/lib
-        #- cd $c
-    
+        - apt -y install libboost1.71-all-dev libssl-dev rapidjson-dev libicu-dev libcurl4-openssl-dev libgtest-dev    
     script:
         - mkdir -p build && cd build
         - cmake -DCMAKE_BUILD_TYPE=Release 
@@ -27,6 +26,35 @@ build-nix:
         - make
         - ctest -V
         
+sonar-linux:
+    stage: sonar
+    image: ubuntu:20.04
+    tags:
+        - linux
+        - docker
+        - x64
+    before_script:
+        - export TZ=Europe/Dublin
+        - ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+        - apt -y update && apt -y install gcc g++ cmake make git ssh
+        - apt -y install libboost1.71-all-dev libssl-dev rapidjson-dev libicu-dev libcurl4-openssl-dev libgtest-dev
+        - apt -y install unzip curl wget
+        - mkdir -p .sonar/bw-output
+        - curl -sSLo build-wrapper-linux-x86.zip  $SONAR_HOST_URL/static/cpp/build-wrapper-linux-x86.zip
+        - unzip -o build-wrapper-linux-x86.zip -d .sonar
+        - curl -sSLo sonar-scanner.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.6.2.2472-linux.zip
+        - unzip -o sonar-scanner.zip -d .sonar 
+    script:
+        - mkdir -p build && cd build
+        - cmake -DCMAKE_BUILD_TYPE=Release
+            -DTMDB_API_KEY=$TMDB_KEY -DBUILD_TEST=ON -DBUILD_STATIC=ON -DBUILD_SHARED=OFF ..        
+        - .sonar/build-wrapper-linux-x86/build-wrapper-linux-x86-64 --out-dir .sonar/bw-output make
+        - .sonar/sonar-scanner-4.6.2.2472-linux/bin/sonar-scanner -Dsonar.cfamily.build-wrapper-output=.sonar/bw-output
+            -Dsonar.host.url="${SONAR_HOST_URL}" -Dsonar.token="${SONAR_TOKEN}"
+    cache:
+      paths:
+        - .sonar
+        - .gcov
 
 
 #build-win10:
