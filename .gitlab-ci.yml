@@ -3,12 +3,12 @@ stages:
     - sonar
 
 
-build-linix:
+build-linux:
     tags:
         - linux
         - docker
         - x64
-    image: ubuntu:20.04 
+    image: ubuntu:24.04 
     stage: build   
     before_script:
         - export TZ=Europe/Dublin
@@ -28,7 +28,7 @@ build-linix:
         
 sonar-linux:
     stage: sonar
-    image: ubuntu:20.04
+    image: ubuntu:24.04
     tags:
         - linux
         - docker
