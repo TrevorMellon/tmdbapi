@@ -1,7 +1,12 @@
 SET (CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake/modules)
 
-SET(Boost_USE_STATIC_LIBS ON)
-ADD_DEFINITIONS("-DBOOST_ALL_NO_LIB")
+if(WIN32)
+	set(Boost_USE_STATIC_LIBS OFF)
+	ADD_DEFINITIONS("-DBOOST_ALL_DYN_LINK")
+else(WIN32)
+	set(Boost_USE_STATIC_LIBS ON)
+	ADD_DEFINITIONS("-DBOOST_ALL_NO_LIB")
+endif(WIN32)
 
 find_package(Boost REQUIRED COMPONENTS serialization date_time regex thread locale filesystem system)
 if (Boost_FOUND)
