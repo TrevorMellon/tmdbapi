@@ -14,7 +14,7 @@ build-linux:
         - export TZ=Europe/Dublin
         - ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
         - apt -y update && apt -y install gcc g++ cmake make git ssh
-        - apt -y install libboost1.71-all-dev libssl-dev rapidjson-dev libicu-dev libcurl4-openssl-dev libgtest-dev    
+        - apt -y install libboost1.83-all-dev libssl-dev rapidjson-dev libicu-dev libcurl4-openssl-dev libgtest-dev    
     script:
         - mkdir -p build && cd build
         - cmake -DCMAKE_BUILD_TYPE=Release 
@@ -37,7 +37,7 @@ sonar-linux:
         - export TZ=Europe/Dublin
         - ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
         - apt -y update && apt -y install gcc g++ cmake make git ssh
-        - apt -y install libboost1.71-all-dev libssl-dev rapidjson-dev libicu-dev libcurl4-openssl-dev libgtest-dev
+        - apt -y install libboost1.83-all-dev libssl-dev rapidjson-dev libicu-dev libcurl4-openssl-dev libgtest-dev
         - apt -y install unzip curl wget
         - mkdir -p .sonar/bw-output
         - curl -sSLo build-wrapper-linux-x86.zip  $SONAR_HOST_URL/static/cpp/build-wrapper-linux-x86.zip
