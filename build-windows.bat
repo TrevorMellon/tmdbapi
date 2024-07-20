@@ -12,5 +12,5 @@ call addopenssl
 mkdir build && cd build
 cmake -DCMAKE_BUILD_TYPE=Release -DTMDB_API_KEY=%TMDB_KEY% -DBUILD_TEST=ON ..
 
-nmake
+msbuild /p:Configuration=Debug tmdbapi.sln
 ctest -V
