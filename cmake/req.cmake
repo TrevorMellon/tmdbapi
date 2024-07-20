@@ -34,6 +34,9 @@ if(OPENSSL_FOUND)
 	include_directories("${OPENSSL_INCLUDE_DIR}")
 endif(OPENSSL_FOUND)
 
+# Add this to win build if not working:
+# -DCURL_NO_CURL_CMAKE=ON"
+
 find_package(CURL)
 if(CURL_FOUND)
 	include_directories("${CURL_INCLUDE_DIRS}")
