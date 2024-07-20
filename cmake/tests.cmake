@@ -1,13 +1,16 @@
-find_package(GTest)
+#find_package(GTest)
 
 #add_definitions(-DTMDB_USE_OPENSSL=1)
+
+
 
 SET(TEST_SRC ${PROJECT_SOURCE_DIR}/tests/test.cpp)
 
 include(FetchContent)
 FetchContent_Declare(
-  googletest
+  googletest  
   URL https://github.com/google/googletest/archive/03597a01ee50ed33e9dfd640b249b4be3799d395.zip
+  DOWNLOAD_EXTRACT_TIMESTAMP true
 )
 
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
@@ -19,7 +22,7 @@ add_executable(tmdbtest ${TEST_SRC}
 target_link_libraries(tmdbtest ${PROJECT_NAME})
 
 target_link_libraries(tmdbtest 
-			GTest::gtest_main
+			gtest_main
 			${Boost_LIBRARIES}
 			${ICU_LIBRARIES}
 			)
@@ -51,4 +54,6 @@ if(USING_CURL)
 endif()
 
 add_test(NAME test1 COMMAND ${PROJECT_BINARY_DIR}/tmdbtest)
+
+include(GoogleTest)
 
