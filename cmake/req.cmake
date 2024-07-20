@@ -9,11 +9,7 @@ if (Boost_FOUND)
     add_definitions( "-DHAS_BOOST" )
 endif (Boost_FOUND)
 
-if(WIN32)
-	find_package(ICU OPTIONAL_COMPONENTS dt uc i18n)
-else(WIN32)
-	find_package(ICU OPTIONAL_COMPONENTS data uc i18n)
-endif(WIN32)
+find_package(ICU OPTIONAL_COMPONENTS dt uc i18n)
 
 if(NOT MSVC)
 	SET(RAPIDJSON_USE_SSE42 ON)
