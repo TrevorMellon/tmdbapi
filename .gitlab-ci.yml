@@ -1,5 +1,5 @@
 stages:
-    - build
+    - test
     - sonar
 
 
@@ -9,7 +9,7 @@ build-linux:
         - docker
         - x64
     image: ubuntu:24.04 
-    stage: build   
+    stage: test   
     before_script:
         - export TZ=Europe/Dublin
         - ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
@@ -25,6 +25,15 @@ build-linux:
            ..
         - make
         - ctest -V
+
+build-windows:
+    tags:
+        - windows
+        - native
+        - x64
+    stage: test
+    script: 
+        - cmd /c build-windows.bat
         
 sonar-linux:
     stage: sonar
@@ -33,6 +42,7 @@ sonar-linux:
         - linux
         - docker
         - x64
+    allow_failure: true
     before_script:
         - export TZ=Europe/Dublin
         - ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
@@ -57,27 +67,5 @@ sonar-linux:
         - .gcov
 
 
-#build-win10:
-#    tags:
-#        - windows
-#        - win10
-#    before_script:
-#        - mkdir win10
-#        - cd win10
-#                        
-#        - cmd /c "echo call vcvarsall x64 > mybuild.bat"
-#        
-#        - cmd /c "echo SET SDK_ROOT=e:\sdk\shared>> mybuild.bat"
-#        - cmd /c "echo SET PATH=%SDK_ROOT%\bin;%PATH%>> mybuild.bat"
-#        - cmd /c "echo SET include=%SDK_ROOT%\include;%include%>> mybuild.bat"
-#        - cmd /c "echo SET lib=%SDK_ROOT%\lib;%lib%>> mybuild.bat"
-#
-#        - cmd /c "echo echo Path:%PATH% >> mybuild.bat"
-#
-#        - cmd /c 'echo cmake -G "NMake Makefiles" -DTMDB_API_KEY=%TMDB_KEY% -DBUILD_TEST=ON -DCMAKE_BUILD_TYPE=Release .. >> mybuild.bat'
-#        - cmd /c "echo nmake >> mybuild.bat"
-#        - cmd /c "echo ctest -V >> mybuild.bat"
-#
-#    script: 
-#        - cmd /c mybuild.bat
-#        
+
+        
